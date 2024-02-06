@@ -24,7 +24,7 @@ public class InvoiceRestController {
     }
 
     @GetMapping("/{id}")
-    public InvoiceModel getSingleInvoice(@PathVariable(name="id") Long id){
+    public InvoiceModel getSingleInvoice(@PathVariable(name="id") int id){
         return invoiceService.getById(id);
     }
 
@@ -44,13 +44,13 @@ public class InvoiceRestController {
     }
 
     @GetMapping("/delete/{id}")
-    public boolean deleteInvoice(@PathVariable(name="id") Long id){
+    public boolean deleteInvoice(@PathVariable(name="id") int id){
 
         return invoiceService.deleteInvoice(id);
     }
 
     @PutMapping("/update/{id}")
-    public InvoiceModel deleteInvoice(@RequestBody InvoiceModel updateModel, @PathVariable(name="id") Long id){
+    public InvoiceModel deleteInvoice(@RequestBody InvoiceModel updateModel, @PathVariable(name="id") int id){
         return invoiceService.updateInvoice(id, updateModel);
     }
 

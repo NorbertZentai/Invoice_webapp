@@ -5,10 +5,10 @@ import com.invoicehandler.webapp.models.InvoiceModel;
 import java.util.List;
 
 public interface InvoiceDataInterface {
-    public InvoiceModel getById(long id);
+    public InvoiceModel getById(int id);
     public List<InvoiceModel> getInvoices();
-    public List<InvoiceModel> searchInvoices(String SearchTerm);
+    public List<InvoiceModel> searchInvoices(String searchTerm);
     public int addInvoice(InvoiceModel newInvoice);
-    public boolean deleteInvoice(long ID);
-    public InvoiceModel updateInvoice(long idToUpdate, InvoiceModel updateInvoice);
+    public boolean deleteInvoice(int id);
+    public InvoiceModel updateInvoice(int idToUpdate, InvoiceModel updateInvoice);
 }

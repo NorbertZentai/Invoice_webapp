@@ -10,8 +10,12 @@ public class InvoiceMapper implements RowMapper<InvoiceModel> {
     @Override
     public InvoiceModel mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        InvoiceModel invoice = new InvoiceModel(rs.getInt("Id"), rs.getString("Customer_Name"), rs.getDate("Date_Of_Invoice").toLocalDate(), rs.getDate("Due_Date").toLocalDate(), rs.getString("Title"), rs.getString("Comment"), rs.getInt("Price"));
-
-        return invoice;
+        return new InvoiceModel(rs.getInt("Id"),
+                rs.getString("Customer_Name"),
+                rs.getString("Date_Of_Invoice"),
+                rs.getString("Due_Date"),
+                rs.getString("Title"),
+                rs.getString("Comment"),
+                rs.getInt("Price"));
     }
 }

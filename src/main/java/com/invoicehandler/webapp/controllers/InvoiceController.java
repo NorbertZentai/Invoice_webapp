@@ -30,7 +30,7 @@ public class InvoiceController {
     public String showInvoice(Model model){
         List<InvoiceModel> invoice = new ArrayList<InvoiceModel>();
 
-        invoice.add(new InvoiceModel(1, "Karoly", LocalDate.of(2024, 1, 1), LocalDate.of(2024,5, 1), "GTFO", "Bought for pS3", 7000));
+        invoice.add(new InvoiceModel(1, "Karoly", "2024-01-01", "2024-05-01", "GTFO", "Bought for pS3", 7000));
 
         model.addAttribute("title", "Invoice");
         model.addAttribute("invoice", invoice);

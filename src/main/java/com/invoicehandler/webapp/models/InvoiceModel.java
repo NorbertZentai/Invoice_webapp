@@ -7,9 +7,6 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
-import java.time.LocalDate;
-
 @Getter
 @Setter
 public class InvoiceModel {
@@ -19,9 +16,9 @@ public class InvoiceModel {
     @NotEmpty
     private String customerName;
     @NotEmpty
-    private LocalDate dateOfInvoice;
+    private String dateOfInvoice;
     @NotEmpty
-    private LocalDate dueDate;
+    private String dueDate;
     @NotEmpty
     private String title;
     @NotEmpty
@@ -29,11 +26,20 @@ public class InvoiceModel {
     @NotEmpty
     private int price;
 
-    public InvoiceModel(int id, String customerName, Date dateOfInvoice, Date dueDate) {
+    public InvoiceModel() {
     }
 
-    public InvoiceModel(int id, String customerName, LocalDate dateOfInvoice, LocalDate dueDate, String title, String comment, int price) {
+    public InvoiceModel(int id, String customerName, String dateOfInvoice, String dueDate, String title, String comment, int price) {
         this.id = id;
+        this.customerName = customerName;
+        this.dateOfInvoice = dateOfInvoice;
+        this.dueDate = dueDate;
+        this.title = title;
+        this.comment = comment;
+        this.price = price;
+    }
+
+    public InvoiceModel(String customerName, String dateOfInvoice, String dueDate, String title, String comment, int price) {
         this.customerName = customerName;
         this.dateOfInvoice = dateOfInvoice;
         this.dueDate = dueDate;

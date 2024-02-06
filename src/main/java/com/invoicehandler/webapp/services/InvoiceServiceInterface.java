@@ -6,10 +6,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 public interface InvoiceServiceInterface {
-    public InvoiceModel getById(long id);
+    public InvoiceModel getById(int id);
     public List<InvoiceModel> getInvoices();
     public List<InvoiceModel> searchInvoices(String SearchTerm);
     public int addInvoice(InvoiceModel newInvoice);
-    public boolean deleteInvoice(long ID);
-    public InvoiceModel updateInvoice(long idToUpdate, InvoiceModel updateInvoice);
+    public boolean deleteInvoice(int ID);
+    public InvoiceModel updateInvoice(int idToUpdate, InvoiceModel updateInvoice);
 }

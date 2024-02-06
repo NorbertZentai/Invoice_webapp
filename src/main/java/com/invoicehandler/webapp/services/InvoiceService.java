@@ -1,6 +1,5 @@
 package com.invoicehandler.webapp.services;
 
-import com.invoicehandler.webapp.data.InvoiceDAO;
 import com.invoicehandler.webapp.data.InvoiceDataInterface;
 import com.invoicehandler.webapp.models.InvoiceModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ public class InvoiceService implements InvoiceServiceInterface{
     InvoiceDataInterface invoiceDAO;
 
     @Override
-    public InvoiceModel getById(long id) {
+    public InvoiceModel getById(int id) {
         return invoiceDAO.getById(id);
     }
 
@@ -35,12 +34,12 @@ public class InvoiceService implements InvoiceServiceInterface{
     }
 
     @Override
-    public boolean deleteInvoice(long ID) {
-        return invoiceDAO.deleteInvoice(ID);
+    public boolean deleteInvoice(int id) {
+        return invoiceDAO.deleteInvoice(id);
     }
 
     @Override
-    public InvoiceModel updateInvoice(long idToUpdate, InvoiceModel updateInvoice) {
+    public InvoiceModel updateInvoice(int idToUpdate, InvoiceModel updateInvoice) {
         return invoiceDAO.updateInvoice(idToUpdate, updateInvoice);
     }
 }
