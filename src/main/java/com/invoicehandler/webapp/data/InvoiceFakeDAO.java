@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class InvoiceDAO implements InvoiceDataInterface{
+public class InvoiceFakeDAO implements InvoiceDataInterface {
 
     List<InvoiceModel> invoices = new ArrayList<InvoiceModel>();
 
-    public InvoiceDAO() {
+    public InvoiceFakeDAO() {
         invoices.add(new InvoiceModel(1, "Karoly", "2024-01-01", "2024-05-01", "GTFO", "Bought for pS3", 7000));
-
     }
 
     @Override
@@ -64,9 +63,9 @@ public class InvoiceDAO implements InvoiceDataInterface{
     }
 
     @Override
-    public boolean deleteInvoice(int ID) {
+    public boolean deleteInvoice(int id) {
         for(InvoiceModel invoice : invoices){
-            if(invoice.getId() == ID){
+            if(invoice.getId() == id){
                 invoices.remove(invoice);
                 return true;
             }

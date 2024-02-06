@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 public class InvoiceModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty
     private String customerName;
