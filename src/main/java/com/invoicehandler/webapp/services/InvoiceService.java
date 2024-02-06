@@ -1,0 +1,46 @@
+package com.invoicehandler.webapp.services;
+
+import com.invoicehandler.webapp.data.InvoiceDAO;
+import com.invoicehandler.webapp.data.InvoiceDataInterface;
+import com.invoicehandler.webapp.models.InvoiceModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class InvoiceService implements InvoiceServiceInterface{
+
+    @Autowired
+    InvoiceDataInterface invoiceDAO;
+
+    @Override
+    public InvoiceModel getById(long id) {
+        return invoiceDAO.getById(id);
+    }
+
+    @Override
+    public List<InvoiceModel> getInvoices() {
+        return invoiceDAO.getInvoices();
+    }
+
+    @Override
+    public List<InvoiceModel> searchInvoices(String searchTerm) {
+        return invoiceDAO.searchInvoices(searchTerm);
+    }
+
+    @Override
+    public int addInvoice(InvoiceModel newInvoice) {
+        return invoiceDAO.addInvoice(newInvoice);
+    }
+
+    @Override
+    public boolean deleteInvoice(long ID) {
+        return invoiceDAO.deleteInvoice(ID);
+    }
+
+    @Override
+    public InvoiceModel updateInvoice(long idToUpdate, InvoiceModel updateInvoice) {
+        return invoiceDAO.updateInvoice(idToUpdate, updateInvoice);
+    }
+}

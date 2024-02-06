@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html layout:decorate="components/default">
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h2>List of users</h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <th>
+                                User Name
+                            </th>
+                            <th>
+                                Edit
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each = "i:${invoice}">
+                            <td th:text="${i.user}">
+                                User
+                            </td>
+                            <td>
+                                edit stuff
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

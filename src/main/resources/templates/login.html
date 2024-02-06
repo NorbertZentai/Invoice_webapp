@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html layout:decorate="~{components/default}">
+<body>
+    <div class="container my-5" layout:fragment="content">
+        <div class="alert alert-success text-center">
+            <h1>Welcome!</h1>
+            <h4>First you need to log in or create a profile to see and manage your invoices!</h4>
+        </div>
+    <h3 class="alert alert-heading"></h3>
+        <form action="#" method="post" th:action="@{processLogin}" th:object="${loginModel}">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input th:field="*{username}" type="text" class="form-control" id="username" aria-describedby="usernamehelp">
+                <p class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</p>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input th:field="*{password}" type="text" class="form-control" id="password">
+                <p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</p>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberme">
+                <label class="form-check-label" for="rememberme">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <span>You don't have an account? <a  th:href="@{/registration}">Sign Up</a></span>
+        </form>
+    </div>
+
+</body>
+</html>

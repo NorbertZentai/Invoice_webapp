@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html layout:decorate="components/default">
+<body>
+<div layout:fragment="content">
+    <h1>Create Invoice.</h1>
+    <div class="container my-5">
+        <form action="#" method="post" th:action="@{processInvoice}"  th:object="${invoiceModel}">
+            <div class="form-group">
+                <label class="control-label" for="recipient">
+                    Recipient's Name:
+                </label>
+                <input th:field="*{getCustomerName}" id="recipient" class="form-control" required autofocus="autofocus" />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="dateOfInvoice">
+                    Date of Invoice:
+                </label>
+                <input th:field="*{dateOfInvoice}" id="dateOfInvoice" class="form-control" required autofocus="autofocus" />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="dueDate">
+                    Due Date:
+                </label>
+                <input th:field="*{dueDate}" id="dueDate" class="form-control" required autofocus="autofocus" />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="title">
+                    Title:
+                </label>
+                <input th:field="*{title}" id="title" class="form-control" required autofocus="autofocus" />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="price">
+                    Price:
+                </label>
+                <input th:field="*{price}" id="price" class="form-control" required autofocus="autofocus" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
