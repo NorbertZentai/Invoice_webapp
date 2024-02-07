@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html layout:decorate="~{components/default}">
+<html layout:decorate="components/default">
 <body>
-    <div class="container my-5 mt-3 mb-3" layout:fragment="content">
+    <div layout:fragment="content">
         <div class="alert alert-success text-center">
             <h1>Welcome!</h1>
             <h4>First you need to log in or create a profile to see and manage your invoices!</h4>
         </div>
-    <h3 class="alert alert-heading"></h3>
-        <form action="#" method="post" th:action="@{processLogin}" th:object="${loginModel}">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input th:field="*{username}" type="text" class="form-control" id="username" aria-describedby="usernamehelp">
-                <p class="alert alert-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</p>
+
+        <div class="container my-5 mt-3 mb-3 w-50" >
+            <div>
+                <form action="#" method="post" th:action="@{processLogin}" th:object="${userModel}">
+                    <div class="input-group input-group-lg my-4">
+                        <span class="input-group-text w-15" style="width:150px;">Username: </span>
+                        <input type="text" autofocus="autofocus" class="form-control" required th:field="*{username}">
+                        <p class="alert alert-danger" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">User error</p>
+                    </div>
+                    <div class="input-group input-group-lg my-4">
+                        <span class="input-group-text w-15" style="width:150px;">Password: </span>
+                        <input type="text" autofocus="autofocus" class="form-control" required th:field="*{password}">
+                        <p class="alert alert-danger" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password error</p>
+                    </div>
+                    <button class="btn btn-primary float-right py-3" type="submit" style="width: 150px">Login</button>
+                    <span>Don't have an account? <a th:href="@{/registration}">Sign Up</a></span>
+                </form>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input th:field="*{password}" type="text" class="form-control" id="password">
-                <p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</p>
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="rememberme">
-                <label class="form-check-label" for="rememberme">Remember me</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <span>You don't have an account? <a  th:href="@{/registration}">Sign Up</a></span>
-        </form>
+        </div>
     </div>
 
 </body>

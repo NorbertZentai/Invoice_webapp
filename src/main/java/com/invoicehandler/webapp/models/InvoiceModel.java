@@ -4,6 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,17 +14,16 @@ public class InvoiceModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotEmpty
+    @NotEmpty(message = "Name is required!")
     private String customerName;
-    @NotEmpty
+    @NotEmpty(message = "Date of Invoice is required!")
     private String dateOfInvoice;
-    @NotEmpty
+    @NotEmpty(message = "Due date is required!")
     private String dueDate;
-    @NotEmpty
+    @NotEmpty(message = "Title is required!")
     private String title;
-    @NotEmpty
     private String comment;
-    @NotEmpty
+    @NotNull(message = "Price is required!")
     private int price;
 
     public InvoiceModel() {

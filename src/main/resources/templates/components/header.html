@@ -2,7 +2,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" th:href="@{/}">Invoice Manager</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -15,13 +16,14 @@
                     <a class="nav-link" th:href="@{/admin}">Admin</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                       id="navbarDropdown" role="button">
                         Invoice
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" th:href="@{/invoice}">Invoice</a>
-                        <a class="dropdown-item" th:href="@{/invoice/list}">List of Invoices</a>
-                        <a class="dropdown-item" th:href="@{/invoice/create}">Create Invoice</a>
+                    <div aria-labelledby="navbarDropdown" class="dropdown-menu">
+                        <a class="dropdown-item" th:href="@{/invoice}">List of Invoices</a>
+                        <a class="dropdown-item" th:href="@{/invoice/searchForm}">Search for Invoices</a>
+                        <a class="dropdown-item" th:href="@{/invoice/create}">Create new Invoice</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -29,7 +31,7 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <input aria-label="Search" class="form-control mr-sm-2" placeholder="Search" type="search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>

@@ -2,7 +2,9 @@
 <html layout:decorate="components/default">
 <body>
 
-    <div class="container-fluid mt-3 mb-3" layout:fragment="content">
+<div class="mt-3 mb-3" layout:fragment="content">
+    <h1>Invoice</h1>
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <h3>
@@ -35,7 +37,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each = "i:${invoices}">
+                    <tr th:each="i:${invoice}">
                         <td th:text="${i.id}">
                             1
                         </td>
@@ -54,7 +56,7 @@
                         <td th:text="${i.comment}">
                             Default
                         </td>
-                        <td th:text="${i.price} + ' Ft'" >
+                        <td th:text="${i.price} + ' Ft'">
                             3000
                         </td>
                     </tr>
@@ -63,6 +65,7 @@
             </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>

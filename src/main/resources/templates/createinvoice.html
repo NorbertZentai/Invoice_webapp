@@ -1,42 +1,58 @@
 <!DOCTYPE html>
 <html layout:decorate="components/default">
 <body>
-<div layout:fragment="content  mt-3 mb-3">
-    <h1>Create Invoice.</h1>
-    <div class="container my-5">
-        <form action="#" method="post" th:action="@{processInvoice}"  th:object="${invoiceModel}">
+<div class="container mt-3 mb-3" layout:fragment="content" >
+    <div class="container my-2">
+    <h1 class="text-center">Create Invoice</h1>
+        <form action="#" method="post" th:action="@{/invoice/addNewInvoice}" th:object="${invoiceModel}">
             <div class="form-group">
-                <label class="control-label" for="recipient">
-                    Recipient's Name:
+                <label class="control-label" for="customer">
+                    Customer's Name:
                 </label>
-                <input th:field="*{getCustomerName}" id="recipient" class="form-control" required autofocus="autofocus" />
+                <input autofocus="autofocus" class="form-control" id="customer" required th:field="*{customerName}" type="text"/>
+                <p class="alert alert-danger" th:errors="*{customerName}" th:if="${#fields.hasErrors('customerName')}">Customer name
+                    error</p>
             </div>
             <div class="form-group">
                 <label class="control-label" for="dateOfInvoice">
                     Date of Invoice:
                 </label>
-                <input th:field="*{dateOfInvoice}" id="dateOfInvoice" class="form-control" required autofocus="autofocus" />
+                <input autofocus="autofocus" class="form-control" id="dateOfInvoice" required th:field="*{dateOfInvoice}" type="date"/>
+                <p class="alert alert-danger" th:errors="*{dateOfInvoice}" th:if="${#fields.hasErrors('dateOfInvoice')}">Date
+                    error</p>
             </div>
             <div class="form-group">
                 <label class="control-label" for="dueDate">
                     Due Date:
                 </label>
-                <input th:field="*{dueDate}" id="dueDate" class="form-control" required autofocus="autofocus" />
+                <input autofocus="autofocus" class="form-control" id="dueDate" required th:field="*{dueDate}" type="date"/>
+                <p class="alert alert-danger" th:errors="*{dueDate}" th:if="${#fields.hasErrors('dueDate')}">Due date
+                    error</p>
             </div>
             <div class="form-group">
                 <label class="control-label" for="title">
                     Title:
                 </label>
-                <input th:field="*{title}" id="title" class="form-control" required autofocus="autofocus" />
+                <input autofocus="autofocus" class="form-control" id="title" required th:field="*{title}" type="text"/>
+                <p class="alert alert-danger" th:errors="*{title}" th:if="${#fields.hasErrors('title')}">Title
+                    error</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="comment">
+                    Comment:
+                </label>
+                <input autofocus="autofocus" class="form-control" id="comment" required th:field="*{comment}" type="text"/>
             </div>
             <div class="form-group">
                 <label class="control-label" for="price">
                     Price:
                 </label>
-                <input th:field="*{price}" id="price" class="form-control" required autofocus="autofocus" />
+                <input autofocus="autofocus" class="form-control" id="price" required th:field="*{price}" type="text"/>
+                <p class="alert alert-danger" th:errors="*{price}" th:if="${#fields.hasErrors('price')}">Price
+                    error</p>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-success">Create</button>
+                <button class="btn btn-success" type="submit">Create</button>
             </div>
         </form>
     </div>

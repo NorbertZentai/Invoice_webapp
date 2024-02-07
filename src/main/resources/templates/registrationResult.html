@@ -2,7 +2,7 @@
 <html layout:decorate="~{components/default}">
 <body>
 
-<div class="container" th:object="${registrationModel}" layout:fragment="content">
+<div class="container" layout:fragment="content" th:object="${registrationModel}">
     <p>Username: <span th:text="*{username}"></span></p>
     <p>Password: <span th:text="*{password}"></span></p>
     <p>rePassword: <span th:text="*{rePassword}"></span></p>

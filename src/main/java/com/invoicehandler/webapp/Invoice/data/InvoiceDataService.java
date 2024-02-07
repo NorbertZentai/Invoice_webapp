@@ -1,9 +1,8 @@
-package com.invoicehandler.webapp.data;
+package com.invoicehandler.webapp.Invoice.data;
 
 import com.invoicehandler.webapp.models.InvoiceMapper;
 import com.invoicehandler.webapp.models.InvoiceModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,19 +10,19 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-@Primary
-public class InvoiceDataService implements InvoiceDataInterface{
+public class InvoiceDataService implements DataInterface <InvoiceModel> {
 
     @Autowired
     DataSource dataSource;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
     @Override
     public InvoiceModel getById(int id) {
         List<InvoiceModel> result = jdbcTemplate.query("SELECT * FROM INVOICE WHERE Id = ?",
                 new InvoiceMapper(), id);
-        if(!result.isEmpty()){
+        if (!result.isEmpty()) {
             return result.get(0);
         } else {
             return null;
@@ -31,12 +30,12 @@ public class InvoiceDataService implements InvoiceDataInterface{
     }
 
     @Override
-    public List<InvoiceModel> getInvoices() {
+    public List<InvoiceModel> getItem() {
         return jdbcTemplate.query("SELECT * FROM INVOICE", new InvoiceMapper());
     }
 
     @Override
-    public List<InvoiceModel> searchInvoices(String searchTerm) {
+    public List<InvoiceModel> searchItem(String searchTerm) {
 
         List<InvoiceModel> invoices = jdbcTemplate.query("SELECT * FROM INVOICE WHERE TITLE LIKE ? OR COMMENT LIKE ?",
                 new InvoiceMapper(), "%" + searchTerm + "%", "%" + searchTerm + "%");
@@ -45,19 +44,18 @@ public class InvoiceDataService implements InvoiceDataInterface{
     }
 
     @Override
-    public int addInvoice(InvoiceModel newInvoice) {
+    public int addItem(InvoiceModel newInvoice) {
         return jdbcTemplate.update("INSERT INTO INVOICE (CUSTOMER_NAME, DATE_OF_INVOICE, DUE_DATE, TITLE, COMMENT, PRICE) VALUES (?,?,?,?,?,?)",
                 newInvoice.getCustomerName(),
                 newInvoice.getDateOfInvoice(),
                 newInvoice.getDueDate(),
                 newInvoice.getTitle(),
                 newInvoice.getComment(),
-                newInvoice.getPrice()
-        );
+                newInvoice.getPrice());
     }
 
     @Override
-    public boolean deleteInvoice(int id) {
+    public boolean deleteItem(int id) {
         int result = jdbcTemplate.update("DELETE FROM INVOICE WHERE ID=?", id);
         if (result > 0) {
             return true;
@@ -67,7 +65,7 @@ public class InvoiceDataService implements InvoiceDataInterface{
     }
 
     @Override
-    public InvoiceModel updateInvoice(int idToUpdate, InvoiceModel updateInvoice) {
+    public InvoiceModel updateItem(int idToUpdate, InvoiceModel updateInvoice) {
 
         int result = jdbcTemplate.update("UPDATE INVOICE SET Customer_Name = ?, Date_Of_Invoice = ?, Due_Date = ?, Title = ?, Comment = ?, Price = ? WHERE ID = ?",
                 updateInvoice.getCustomerName(),
@@ -78,7 +76,7 @@ public class InvoiceDataService implements InvoiceDataInterface{
                 updateInvoice.getPrice(),
                 idToUpdate);
 
-         if (result > 0) {
+        if (result > 0) {
             return updateInvoice;
         } else {
             return null;

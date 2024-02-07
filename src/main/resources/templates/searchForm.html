@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html layout:decorate="components/default">
+<body>
+
+    <div layout:fragment="content">
+        <h1 class="alert text-center">Search</h1>
+        <div class="container mb-3">
+            <form action="#" method="post" th:action="@{search}" th:object="${searchModel}">
+                <div class="form-group">
+                    <label class="control-label" for="search">
+                        <h4>Search int Title and Comment:</h4>
+                    </label>
+                    <input autofocus="autofocus" class="form-control" id="search" required th:field="*{searchTerm}" type="text"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
