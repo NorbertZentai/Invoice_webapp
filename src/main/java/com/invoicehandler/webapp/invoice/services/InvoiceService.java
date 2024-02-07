@@ -1,6 +1,6 @@
-package com.invoicehandler.webapp.Invoice.services;
+package com.invoicehandler.webapp.invoice.services;
 
-import com.invoicehandler.webapp.Invoice.data.DataInterface;
+import com.invoicehandler.webapp.invoice.data.DataInterface;
 import com.invoicehandler.webapp.models.InvoiceModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class InvoiceService implements ServiceInterface<InvoiceModel> {
     }
 
     @Override
-    public List<InvoiceModel> getItem() {
-        return invoiceDAO.getItem();
+    public List<InvoiceModel> getItems() {
+        return invoiceDAO.getItems();
     }
 
     @Override

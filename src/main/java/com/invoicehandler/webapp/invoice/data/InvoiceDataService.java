@@ -1,4 +1,4 @@
-package com.invoicehandler.webapp.Invoice.data;
+package com.invoicehandler.webapp.invoice.data;
 
 import com.invoicehandler.webapp.models.InvoiceMapper;
 import com.invoicehandler.webapp.models.InvoiceModel;
@@ -30,7 +30,7 @@ public class InvoiceDataService implements DataInterface <InvoiceModel> {
     }
 
     @Override
-    public List<InvoiceModel> getItem() {
+    public List<InvoiceModel> getItems() {
         return jdbcTemplate.query("SELECT * FROM INVOICE", new InvoiceMapper());
     }
 

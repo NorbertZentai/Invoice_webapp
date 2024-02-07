@@ -1,13 +1,11 @@
-package com.invoicehandler.webapp.Invoice.data;
-
-import com.invoicehandler.webapp.models.InvoiceModel;
+package com.invoicehandler.webapp.invoice.data;
 
 import java.util.List;
 
 public interface DataInterface<T> {
     public T getById(int id);
 
-    public List<T> getItem();
+    public List<T> getItems();
 
     public List<T> searchItem(String searchTerm);
 

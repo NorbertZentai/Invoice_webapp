@@ -16,6 +16,11 @@ public class UserModel {
     private String password;
     @NotEmpty(message = "please add a password!")
     private String rePassword;
+    @NotEmpty(message = "please add a password!")
+    private String newPassword;
+    @NotEmpty(message = "please add a password!")
+    private String reNewPassword;
+    private String role;
     private String lastLogin;
 
     @Override
@@ -25,11 +30,9 @@ public class UserModel {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", rePassword='" + rePassword + '\'' +
+                ", role='" + role + '\'' +
                 ", lastLogin='" + lastLogin + '\'' +
                 '}';
-    }
-
-    public UserModel(int id, String username, String password, String role, String lastLogin) {
     }
 
     public UserModel() {
@@ -39,5 +42,17 @@ public class UserModel {
         this.username = username;
         this.password = password;
         this.rePassword = rePassword;
+    }
+    public UserModel(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public UserModel(int id, String username, String password, String role, String lastLogin) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.lastLogin = lastLogin;
     }
 }

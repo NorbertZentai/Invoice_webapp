@@ -1,8 +1,6 @@
-package com.invoicehandler.webapp.profile.data;
+package com.invoicehandler.webapp.user.data;
 
-import com.invoicehandler.webapp.Invoice.data.DataInterface;
-import com.invoicehandler.webapp.models.InvoiceMapper;
-import com.invoicehandler.webapp.models.InvoiceModel;
+import com.invoicehandler.webapp.invoice.data.DataInterface;
 import com.invoicehandler.webapp.models.UserMapper;
 import com.invoicehandler.webapp.models.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Service
-public class ProfileDataService implements DataInterface<UserModel> {
+public class UserDataService implements DataInterface<UserModel>, UserInterface {
 
     @Autowired
     DataSource dataSource;
@@ -33,7 +31,7 @@ public class ProfileDataService implements DataInterface<UserModel> {
     }
 
     @Override
-    public List<UserModel> getItem() {
+    public List<UserModel> getItems() {
         return jdbcTemplate.query("SELECT * FROM USER", new UserMapper());
     }
 
@@ -45,12 +43,46 @@ public class ProfileDataService implements DataInterface<UserModel> {
         return users;
     }
 
+    public UserModel searchUser(String searchTerm) {
+        List<UserModel> users = jdbcTemplate.query(
+                "SELECT * FROM USER WHERE SOUNDEX(USERNAME) = SOUNDEX(?)",
+                new UserMapper(),
+                searchTerm
+        );
+        if(users.isEmpty()){
+            return null;
+        }else {
+            return users.get(0);
+        }
+    }
+
+    @Override
+    public UserModel searchExactUser(String searchTerm) {
+        List<UserModel> users = jdbcTemplate.query(
+                "SELECT * FROM USER WHERE USERNAME = ?",
+                new UserMapper(),
+                searchTerm
+        );
+
+        if(users.isEmpty()){
+            return null;
+        }else {
+            return users.get(0);
+        }
+    }
+
+    @Override
+    public boolean changePassword() {
+        return false;
+    }
+
     @Override
     public int addItem(UserModel newItem) {
-        return jdbcTemplate.update("INSERT INTO USER (USERNAME, PASSWORD, CLASS) VALUES (?,?,?)",
+        return jdbcTemplate.update("INSERT INTO USER (USERNAME, PASSWORD, ROLE, LAST_LOGIN) VALUES (?,?,?,?)",
                 newItem.getUsername(),
                 newItem.getPassword(),
-                newItem.getClass());
+                newItem.getRole(),
+                newItem.getLastLogin());
     }
 
     @Override
@@ -65,10 +97,10 @@ public class ProfileDataService implements DataInterface<UserModel> {
 
     @Override
     public UserModel updateItem(int idToUpdate, UserModel updateItem) {
-        int result = jdbcTemplate.update("UPDATE USER SET USERNAME = ?, PASSWORD =  ?, CLASS = ? WHERE ID = ?",
+        int result = jdbcTemplate.update("UPDATE USER SET USERNAME = ?, ROLE = ?, LAST_LOGIN = ? WHERE ID = ?",
                 updateItem.getUsername(),
-                updateItem.getPassword(),
-                updateItem.getClass(),
+                updateItem.getRole(),
+                updateItem.getLastLogin(),
                 idToUpdate);
 
         if (result > 0) {

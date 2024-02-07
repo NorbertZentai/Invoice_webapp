@@ -1,7 +1,7 @@
-package com.invoicehandler.webapp.Invoice.controllers;
+package com.invoicehandler.webapp.invoice.controllers;
 
 import com.invoicehandler.webapp.models.InvoiceModel;
-import com.invoicehandler.webapp.Invoice.services.InvoiceService;
+import com.invoicehandler.webapp.invoice.services.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class InvoiceRestController {
 
     @GetMapping("/list")
     public List<InvoiceModel> showInvoices() {
-        return service.getItem();
+        return service.getItems();
     }
 
     @GetMapping("/search/{Term}")

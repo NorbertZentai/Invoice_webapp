@@ -1,9 +1,9 @@
-package com.invoicehandler.webapp.Invoice.controllers;
+package com.invoicehandler.webapp.invoice.controllers;
 
-import com.invoicehandler.webapp.Invoice.services.ServiceInterface;
+import com.invoicehandler.webapp.invoice.services.ServiceInterface;
 import com.invoicehandler.webapp.models.InvoiceModel;
 import com.invoicehandler.webapp.models.SearchModel;
-import com.invoicehandler.webapp.Invoice.services.InvoiceService;
+import com.invoicehandler.webapp.invoice.services.InvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +28,7 @@ public class InvoiceController {
     @GetMapping
     public String showAllInvoices(Model model){
 
-        List<InvoiceModel> invoices = invoiceService.getItem();
+        List<InvoiceModel> invoices = invoiceService.getItems();
 
         model.addAttribute("title", "Invoices");
         model.addAttribute("invoices", invoices);
@@ -56,12 +56,12 @@ public class InvoiceController {
     }
 
     @PostMapping("/addNewInvoice")
-    public String processInvoice(@Valid InvoiceModel newInvoice, BindingResult bindingResult, Model model) {
+    public String processInvoice(@Valid InvoiceModel newInvoice, Model model) {
 
         newInvoice.setId(0);
 
         invoiceService.addItem(newInvoice);
-        List<InvoiceModel> invoices = invoiceService.getItem();
+        List<InvoiceModel> invoices = invoiceService.getItems();
 
         model.addAttribute("mainTitle", "Item added successfully!");
         model.addAttribute("invoices", invoices);
@@ -96,7 +96,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/editForm")
-    public String showEditForm(InvoiceModel invoiceModel, Model model){
+    public String editForm(InvoiceModel invoiceModel, Model model){
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
 
         model.addAttribute("title", "Edit Invoice");
@@ -110,7 +110,7 @@ public class InvoiceController {
 
         invoiceService.updateItem(invoiceModel.getId(), invoiceModel);
 
-        List<InvoiceModel> invoices = invoiceService.getItem();
+        List<InvoiceModel> invoices = invoiceService.getItems();
 
         model.addAttribute("title", "Updated item");
         model.addAttribute("mainTitle", "Successfully updated the item with the ID = " + invoiceModel.getId() + "!");
@@ -120,12 +120,12 @@ public class InvoiceController {
     }
 
     @PostMapping("/delete")
-    public String deleteInvoice(@Valid InvoiceModel invoiceModel, BindingResult bindingResult, Model model){
+    public String deleteInvoice(@Valid InvoiceModel invoiceModel, Model model){
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
 
         invoiceService.deleteItem(invoiceModel.getId());
-        List<InvoiceModel> invoices = invoiceService.getItem();
+        List<InvoiceModel> invoices = invoiceService.getItems();
 
         model.addAttribute("title", "Deleted item");
         model.addAttribute("mainTitle", "Successfully deleted the Item titled " + item.getTitle() + "!");

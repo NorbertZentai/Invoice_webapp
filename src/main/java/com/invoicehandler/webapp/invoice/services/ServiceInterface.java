@@ -1,11 +1,11 @@
-package com.invoicehandler.webapp.Invoice.services;
+package com.invoicehandler.webapp.invoice.services;
 
 import java.util.List;
 
 public interface ServiceInterface<T> {
     public T getById(int id);
 
-    public List<T> getItem();
+    public List<T> getItems();
 
     public List<T> searchItem(String SearchTerm);
 

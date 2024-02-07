@@ -1,6 +1,5 @@
 package com.invoicehandler.webapp.models;
 
-import org.apache.catalina.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -17,5 +16,6 @@ public class UserMapper implements RowMapper<UserModel> {
                 rs.getString("Password"),
                 rs.getString("Role"),
                 rs.getString("Last_Login"));
+
     }
 }
