@@ -5,6 +5,8 @@ import com.invoicehandler.webapp.models.RoleModel;
 import com.invoicehandler.webapp.models.UserModel;
 import com.invoicehandler.webapp.role.service.RoleService;
 import com.invoicehandler.webapp.user.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("/processLogin")
-    public String login(@Valid UserModel userModel, Model model) {
+    public String login(@Valid UserModel userModel, Model model, HttpServletRequest request) {
 
         UserModel user = userService.searchExactUser(userModel.getUsername());
 
@@ -67,6 +69,9 @@ public class UserController {
         }
 
         user.setLastLogin(LocalDate.now().toString());
+
+        HttpSession session = request.getSession();
+        session.setAttribute("userDetails", user);
 
         List<UserModel> users = userService.getItems();
         List<RoleModel> roles = roleService.getItems();

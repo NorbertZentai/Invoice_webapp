@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoleModel {
-    @Id
     private int id;
     @NotEmpty(message = "Please add a username!")
     private String roleName;
