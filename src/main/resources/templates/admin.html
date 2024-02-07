@@ -2,15 +2,21 @@
 <html layout:decorate="components/default">
 <body>
 <div layout:fragment="content">
-    <div class="container mt-3 mb-3">
-        <h1 class="alert text-center">List of users</h1>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered table-hover table-sm">
+    <div class="container mt-3 mb-3 text-center">
+        <h1 class="alert text-center" th:if="${mainTitle == null and error == null}">List of users</h1>
+        <h1 class="alert alert-success text-center" th:if="${mainTitle != null}" th:text="${mainTitle}"></h1>
+        <h1 class="alert alert-danger text-center" th:if="${error != null}" th:text="${error}"></h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <table class="table table-bordered table-hover table-sm table-striped" >
                     <thead>
                     <tr>
-                        <th>
+                        <th style="font-size: larger">
                             User Name
+                        </th>
+                        <th>
+                            Delete
                         </th>
                         <th>
                             Edit
@@ -18,12 +24,27 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="i:${invoice}">
-                        <td th:text="${i.user}">
-                            User
+                    <tr th:each="u:${users}">
+                        <td>
+                            <p th:text="${u.username}" style=" font-weight: bold">
+                                1
+                            </p>
                         </td>
                         <td>
-                            edit stuff
+                            <form action="#" method="post" th:action="@{/admin/delete}" th:object="${u}">
+                                <input name="id" type="hidden" th:value="${u.id}">
+                                <button class="btn btn-danger" type="submit" name="deleteItem">Delete</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="#" method="post" th:action="@{/admin/editRole}" th:object="${u}">
+                                <select name="role" class="form-select w-50">
+                                    <option th:each="r : ${roles}" th:value="${r.getRoleName()}" th:text="${r.getRoleName()}"
+                                            th:selected="${u.role == r.getRoleName()}">Roles</option>
+                                </select>
+                                <input name="id" type="hidden" th:value="${u.id}">
+                                <button class="btn btn-secondary" type="submit" name="editItem">update</button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>

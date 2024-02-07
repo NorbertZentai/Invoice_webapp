@@ -5,7 +5,7 @@
     <div layout:fragment="content">
         <h1 class="alert alert-success text-center">Registration</h1>
         <div class="container mt-3 mb-3 w-50">
-            <form action="#" method="post" th:action="@{processRegistration}" th:object="${userModel}">
+            <form action="#" method="post" th:action="@{processSignUp}" th:object="${userModel}">
                 <div class="input-group input-group-lg my-4">
                     <span class="input-group-text w-15" style="width:150px;">Username: </span>
                     <input type="text" autofocus="autofocus" class="form-control" required th:field="*{username}">
