@@ -3,10 +3,10 @@
 <body>
 
 <div layout:fragment="content">
-    <h1 th:if="${mainTitle}" class="alert alert-success text-center pb-3" th:text="${mainTitle}">
+    <h1 class="alert alert-success text-center pb-3" th:if="${mainTitle}" th:text="${mainTitle}">
         Success!
     </h1>
-    <h1 th:unless="${mainTitle}" class="alert text-center mb-4">List of Invoices</h1>
+    <h1 class="alert text-center mb-4" th:unless="${mainTitle}">List of Invoices</h1>
     <div class="container mb-3">
         <div class="container-fluid mt-3 mb-3 row">
             <div class="col-md-12">
@@ -61,14 +61,14 @@
                         </td>
                         <td>
                             <form action="#" method="post" th:action="@{/invoice/delete}" th:object="${i}">
-                                <input name="id" type="hidden" th:value="${i.id}">
-                                <button class="btn btn-danger" type="submit" name="deleteItem">Delete</button>
+                                <input name="id" th:value="${i.id}" type="hidden">
+                                <button class="btn btn-danger" name="deleteItem" type="submit">Delete</button>
                             </form>
                         </td>
                         <td>
                             <form action="#" method="post" th:action="@{/invoice/editForm}" th:object="${i}">
-                                <input name="id" type="hidden" th:value="${i.id}">
-                                <button class="btn btn-secondary" type="submit" name="editItem">Edit</button>
+                                <input name="id" th:value="${i.id}" type="hidden">
+                                <button class="btn btn-secondary" name="editItem" type="submit">Edit</button>
                             </form>
                         </td>
                     </tr>

@@ -23,18 +23,6 @@ public class UserModel {
     private String role;
     private String lastLogin;
 
-    @Override
-    public String toString() {
-        return "UserModel{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", rePassword='" + rePassword + '\'' +
-                ", role='" + role + '\'' +
-                ", lastLogin='" + lastLogin + '\'' +
-                '}';
-    }
-
     public UserModel() {
     }
 
@@ -43,6 +31,7 @@ public class UserModel {
         this.password = password;
         this.rePassword = rePassword;
     }
+
     public UserModel(String username, String password) {
         this.username = username;
         this.password = password;
@@ -54,5 +43,17 @@ public class UserModel {
         this.password = password;
         this.role = role;
         this.lastLogin = lastLogin;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", rePassword='" + rePassword + '\'' +
+                ", role='" + role + '\'' +
+                ", lastLogin='" + lastLogin + '\'' +
+                '}';
     }
 }

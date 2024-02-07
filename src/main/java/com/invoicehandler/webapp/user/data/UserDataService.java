@@ -49,9 +49,9 @@ public class UserDataService implements DataInterface<UserModel>, UserInterface 
                 new UserMapper(),
                 searchTerm
         );
-        if(users.isEmpty()){
+        if (users.isEmpty()) {
             return null;
-        }else {
+        } else {
             return users.get(0);
         }
     }
@@ -64,9 +64,9 @@ public class UserDataService implements DataInterface<UserModel>, UserInterface 
                 searchTerm
         );
 
-        if(users.isEmpty()){
+        if (users.isEmpty()) {
             return null;
-        }else {
+        } else {
             return users.get(0);
         }
     }

@@ -2,8 +2,8 @@ package com.invoicehandler.webapp.controllers;
 
 import com.invoicehandler.webapp.models.RoleModel;
 import com.invoicehandler.webapp.models.UserModel;
-import com.invoicehandler.webapp.user.services.UserService;
 import com.invoicehandler.webapp.role.service.RoleService;
+import com.invoicehandler.webapp.user.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,26 +17,26 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-        UserService userService;
-        RoleService roleService;
+    UserService userService;
+    RoleService roleService;
 
-        @Autowired
-        public AdminController(UserService userService, RoleService roleService) {
-            this.userService = userService;
-            this.roleService = roleService;
-        }
-        @GetMapping
-        public String displayAdmin(Model model) {
-            List<UserModel> users = userService.getItems();
+    @Autowired
+    public AdminController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
-            List<RoleModel> roles = roleService.getItems();
+    @GetMapping
+    public String displayAdmin(Model model) {
+        List<UserModel> users = userService.getItems();
+        List<RoleModel> roles = roleService.getItems();
 
-            model.addAttribute("title", "Admin page");
-            model.addAttribute("roles", roles);
-            model.addAttribute("users", users);
+        model.addAttribute("title", "Admin page");
+        model.addAttribute("roles", roles);
+        model.addAttribute("users", users);
 
-            return "admin";
-        }
+        return "admin";
+    }
 
     @PostMapping("/delete")
     public String deleteRole(@Valid UserModel userModel, Model model) {
@@ -45,9 +45,9 @@ public class AdminController {
 
         UserModel user = userService.getById(userModel.getId());
 
-        if(userService.deleteItem(userModel.getId())){
+        if (userService.deleteItem(userModel.getId())) {
             model.addAttribute("mainTitle", "Successfully deleted the user " + user.getUsername() + "!");
-        } else{
+        } else {
             model.addAttribute("mainTitle", null);
             model.addAttribute("error", "Something went wrong!");
         }
@@ -63,18 +63,18 @@ public class AdminController {
     }
 
     @PostMapping("/editRole")
-    public String editForm(UserModel userModel, RoleModel roleModel, Model model){
+    public String editForm(UserModel userModel, RoleModel roleModel, Model model) {
 
         UserModel user = userService.getById(userModel.getId());
 
         user.setRole(userModel.getRole());
-         if(userService.updateItem(userModel.getId(), user) != null){
-             model.addAttribute("mainTitle", "Successfully changed role! " + user.getUsername() +
-                     " is now " + user.getRole() + "!");
-         } else {
-             model.addAttribute("mainTitle", null);
-             model.addAttribute("error", "Something went wrong!");
-         }
+        if (userService.updateItem(userModel.getId(), user) != null) {
+            model.addAttribute("mainTitle", "Successfully changed role! " + user.getUsername() +
+                    " is now " + user.getRole() + "!");
+        } else {
+            model.addAttribute("mainTitle", null);
+            model.addAttribute("error", "Something went wrong!");
+        }
 
         List<UserModel> users = userService.getItems();
         List<RoleModel> roles = roleService.getItems();

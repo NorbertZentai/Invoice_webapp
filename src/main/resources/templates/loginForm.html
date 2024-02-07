@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html layout:decorate="components/default">
+<body>
+<div layout:fragment="content">
+    <div class="alert alert-success text-center">
+        <h1>Welcome!</h1>
+        <h4>First you need to log in or create a profile to see and manage your invoices!</h4>
+    </div>
+
+    <div class="container my-5 mt-3 mb-3 w-50">
+        <div>
+            <form action="#" method="post" th:action="@{/login}" th:object="${userModel}">
+                <div class="input-group input-group-lg my-4">
+                    <span class="input-group-text w-15" style="width:150px;">Username: </span>
+                    <input autofocus="autofocus" class="form-control" required th:field="*{username}" type="text">
+                    <p class="alert alert-danger" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">User
+                        error</p>
+                </div>
+                <div class="input-group input-group-lg my-4">
+                    <span class="input-group-text w-15" style="width:150px;">Password: </span>
+                    <input autofocus="autofocus" class="form-control" required th:field="*{password}" type="text">
+                    <p class="alert alert-danger" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">
+                        Password error</p>
+                </div>
+                <button class="btn btn-primary float-right py-3" style="width: 150px" type="submit">Login</button>
+                <span>Don't have an account? <a th:href="@{/registration}">Sign Up</a></span>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

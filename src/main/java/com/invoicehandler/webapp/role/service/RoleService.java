@@ -13,6 +13,7 @@ public class RoleService implements ServiceInterface<RoleModel> {
 
     @Autowired
     RoleDataService roleDAO;
+
     @Override
     public RoleModel getById(int id) {
         return roleDAO.getById(id);

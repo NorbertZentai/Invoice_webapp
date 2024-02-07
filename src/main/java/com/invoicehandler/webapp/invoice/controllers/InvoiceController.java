@@ -1,9 +1,9 @@
 package com.invoicehandler.webapp.invoice.controllers;
 
+import com.invoicehandler.webapp.invoice.services.InvoiceService;
 import com.invoicehandler.webapp.invoice.services.ServiceInterface;
 import com.invoicehandler.webapp.models.InvoiceModel;
 import com.invoicehandler.webapp.models.SearchModel;
-import com.invoicehandler.webapp.invoice.services.InvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,14 +26,14 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public String showAllInvoices(Model model){
+    public String showAllInvoices(Model model) {
 
         List<InvoiceModel> invoices = invoiceService.getItems();
 
         model.addAttribute("title", "Invoices");
         model.addAttribute("invoices", invoices);
 
-        return "invoice.html";
+        return "invoice";
     }
 
     @GetMapping("/item")
@@ -43,7 +43,7 @@ public class InvoiceController {
         model.addAttribute("title", "Invoice");
         model.addAttribute("invoice", new InvoiceModel());
 
-        return "invoiceitem.html";
+        return "invoiceItem";
     }
 
     @GetMapping("/create")
@@ -96,7 +96,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/editForm")
-    public String editForm(InvoiceModel invoiceModel, Model model){
+    public String editForm(InvoiceModel invoiceModel, Model model) {
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
 
         model.addAttribute("title", "Edit Invoice");
@@ -106,7 +106,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/updateInvoice")
-    public String updateInvoice(@Valid InvoiceModel invoiceModel, BindingResult bindingResult, Model model){
+    public String updateInvoice(@Valid InvoiceModel invoiceModel, BindingResult bindingResult, Model model) {
 
         invoiceService.updateItem(invoiceModel.getId(), invoiceModel);
 
@@ -120,7 +120,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/delete")
-    public String deleteInvoice(@Valid InvoiceModel invoiceModel, Model model){
+    public String deleteInvoice(@Valid InvoiceModel invoiceModel, Model model) {
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
 

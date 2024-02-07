@@ -2,7 +2,6 @@ package com.invoicehandler.webapp.role.data;
 
 import com.invoicehandler.webapp.invoice.data.DataInterface;
 import com.invoicehandler.webapp.models.RoleMapper;
-import com.invoicehandler.webapp.models.UserMapper;
 import com.invoicehandler.webapp.models.RoleModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

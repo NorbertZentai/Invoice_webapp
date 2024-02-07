@@ -14,15 +14,6 @@ public class RoleModel {
     private String roleName;
     private String description;
 
-    @Override
-    public String toString() {
-        return "RoleModel{" +
-                "id=" + id +
-                ", roleName='" + roleName + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
     public RoleModel() {
     }
 
@@ -39,5 +30,14 @@ public class RoleModel {
 
     public RoleModel(String roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public String toString() {
+        return "RoleModel{" +
+                "id=" + id +
+                ", roleName='" + roleName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

@@ -1,7 +1,7 @@
 package com.invoicehandler.webapp.invoice.controllers;
 
-import com.invoicehandler.webapp.models.InvoiceModel;
 import com.invoicehandler.webapp.invoice.services.InvoiceService;
+import com.invoicehandler.webapp.models.InvoiceModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

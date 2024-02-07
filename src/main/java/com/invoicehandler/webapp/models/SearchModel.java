@@ -11,7 +11,8 @@ public class SearchModel {
     @NotEmpty(message = "Search term is required!")
     String searchTerm;
 
-    public SearchModel() {}
+    public SearchModel() {
+    }
 
     public SearchModel(String searchTerm) {
         this.searchTerm = searchTerm;

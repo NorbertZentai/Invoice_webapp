@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class InvoiceDataService implements DataInterface <InvoiceModel> {
+public class InvoiceDataService implements DataInterface<InvoiceModel> {
 
     @Autowired
     DataSource dataSource;

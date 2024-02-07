@@ -30,7 +30,7 @@ public class UserService implements ServiceInterface<UserModel>, UserInterface {
         return userDAO.searchItem(searchTerm);
     }
 
-    public UserModel searchUser(String searchTerm){
+    public UserModel searchUser(String searchTerm) {
         return userDAO.searchUser(searchTerm);
     }
 
