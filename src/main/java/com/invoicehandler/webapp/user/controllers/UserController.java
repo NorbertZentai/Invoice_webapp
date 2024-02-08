@@ -33,9 +33,8 @@ public class UserController {
 
     @GetMapping("/index")
     public String displayIndex(Model model, HttpServletRequest req){
-        HttpSession session = req.getSession();
-        if(session == null){
-
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
             model.addAttribute("title", "Login");
             model.addAttribute("userModel", new UserModel());
 
@@ -45,15 +44,15 @@ public class UserController {
         model.addAttribute("title", "Profile");
         model.addAttribute("user", new UserModel());
 
-
         return "index";
+
     }
+
 
     @GetMapping
     public String index(Model model, HttpServletRequest req){
-        HttpSession session = req.getSession();
-        if(session == null){
-
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
             model.addAttribute("title", "Login");
             model.addAttribute("userModel", new UserModel());
 

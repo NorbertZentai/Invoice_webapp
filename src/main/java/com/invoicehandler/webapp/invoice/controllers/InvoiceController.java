@@ -4,6 +4,7 @@ import com.invoicehandler.webapp.invoice.services.ServiceInterface;
 import com.invoicehandler.webapp.models.InvoiceModel;
 import com.invoicehandler.webapp.models.SearchModel;
 import com.invoicehandler.webapp.invoice.services.InvoiceService;
+import com.invoicehandler.webapp.models.UserModel;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -26,7 +28,14 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public String showAllInvoices(Model model){
+    public String showAllInvoices(Model model, HttpServletRequest req){
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
 
         List<InvoiceModel> invoices = invoiceService.getItems();
 
@@ -37,17 +46,32 @@ public class InvoiceController {
     }
 
     @GetMapping("/item")
-    public String showInvoice(Model model) {
-        InvoiceModel invoice = new InvoiceModel();
+    public String showInvoice(InvoiceModel invoiceModel, Model model, HttpServletRequest req) {
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
+
+        InvoiceModel invoice = invoiceService.getById(invoiceModel.getId());
 
         model.addAttribute("title", "Invoice");
-        model.addAttribute("invoice", new InvoiceModel());
+        model.addAttribute("invoice", invoice);
 
-        return "invoiceitem.html";
+        return "invoiceItem";
     }
 
     @GetMapping("/create")
-    public String showCreateInvoice(Model model) {
+    public String showCreateInvoice(Model model, HttpServletRequest req) {
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null || user.getRole().equals("user")){
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
 
         model.addAttribute("title", "Create Invoice");
         model.addAttribute("invoiceModel", new InvoiceModel());
@@ -70,7 +94,14 @@ public class InvoiceController {
     }
 
     @GetMapping("/searchForm")
-    public String showSearch(Model model) {
+    public String showSearch(Model model, HttpServletRequest req) {
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
 
         model.addAttribute("title", "Search results");
         model.addAttribute("searchModel", new SearchModel());
@@ -96,7 +127,14 @@ public class InvoiceController {
     }
 
     @PostMapping("/editForm")
-    public String editForm(InvoiceModel invoiceModel, Model model){
+    public String editForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req){
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
 
         model.addAttribute("title", "Edit Invoice");

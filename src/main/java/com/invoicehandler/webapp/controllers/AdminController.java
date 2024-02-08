@@ -28,7 +28,16 @@ public class AdminController {
             this.roleService = roleService;
         }
         @GetMapping
-        public String displayAdmin(Model model) {
+        public String displayAdmin(Model model, HttpServletRequest req) {
+
+            UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+            if(user == null || !user.getRole().equals("admin")){
+                model.addAttribute("title", "Login");
+                model.addAttribute("userModel", new UserModel());
+
+                return "login";
+            }
+
             List<UserModel> users = userService.getItems();
 
             List<RoleModel> roles = roleService.getItems();

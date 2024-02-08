@@ -71,6 +71,12 @@
                                 <button class="btn btn-secondary" type="submit" name="editItem">Edit</button>
                             </form>
                         </td>
+                        <td th:if="${session.userSession.role != 'user'}">
+                            <form action="#" method="post" th:action="@{/invoice/item}" th:object="${i}">
+                                <input name="id" type="hidden" th:value="${i.id}">
+                                <button class="btn btn-info" type="submit" name="editItem">Create</button>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

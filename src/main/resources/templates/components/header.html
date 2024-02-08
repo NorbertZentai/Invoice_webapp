@@ -1,7 +1,7 @@
 <div th:fragment="header">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" th:href="@{/}">Invoice Manager</a>
+        <a class="navbar-brand" th:href="@{/index}">Invoice Manager</a>
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                 data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
@@ -12,7 +12,7 @@
                 <li class="nav-item active" th:if="${session.userSession == null}">
                     <a class="nav-link" th:href="@{/login}">Login <span class="sr-only"></span></a>
                 </li>
-                <li class="nav-item" th:if="${session.userSession != null and (session.userSession.role =='admin')}">
+                <li class="nav-item" th:if="${session.userSession.role =='admin'}">
                     <a class="nav-link" th:href="@{/admin}">Admin</a>
                 </li>
                 <li class="nav-item dropdown">
@@ -23,7 +23,7 @@
                     <div aria-labelledby="navbarDropdown" class="dropdown-menu">
                         <a class="dropdown-item" th:href="@{/invoice}">List of Invoices</a>
                         <a class="dropdown-item" th:href="@{/invoice/searchForm}">Search for Invoices</a>
-                        <a class="dropdown-item" th:href="@{/invoice/create}">Create new Invoice</a>
+                        <a class="dropdown-item" th:if="${session.userSession.role !='user'}" th:href="@{/invoice/create}">Create new Invoice</a>
                     </div>
                 </li>
                 <li class="nav-item" th:if="${session.userSession != null}">
