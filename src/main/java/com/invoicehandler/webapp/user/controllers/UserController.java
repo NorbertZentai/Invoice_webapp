@@ -1,13 +1,14 @@
 package com.invoicehandler.webapp.user.controllers;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import com.invoicehandler.webapp.models.RoleModel;
 import com.invoicehandler.webapp.models.UserModel;
 import com.invoicehandler.webapp.role.service.RoleService;
 import com.invoicehandler.webapp.user.services.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -32,8 +32,70 @@ public class UserController {
     }
 
     @GetMapping("/index")
-    public String displayIndex(Model model){
+    public String displayIndex(Model model, HttpServletRequest req){
+        HttpSession session = req.getSession();
+        if(session == null){
+
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
+
         model.addAttribute("title", "Profile");
+        model.addAttribute("user", new UserModel());
+
+
+        return "index";
+    }
+
+    @GetMapping
+    public String index(Model model, HttpServletRequest req){
+        HttpSession session = req.getSession();
+        if(session == null){
+
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
+
+        model.addAttribute("title", "Profile");
+        model.addAttribute("user", new UserModel());
+
+        return "index";
+    }
+
+    @PostMapping("/passwordUpdate")
+    public String updatePassword(UserModel userModel, Model model, HttpServletRequest req) {
+
+        UserModel user = userService.getById(((UserModel) req.getSession().getAttribute("userSession")).getId());
+
+        BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
+
+        if(!result.verified){
+            userModel.setPassword(null);
+            userModel.setNewPassword(null);
+            userModel.setReNewPassword(null);
+            model.addAttribute("error", "Wrong current password!");
+            model.addAttribute("userModel", userModel);
+            return "index";
+        }
+
+        if(!userModel.getNewPassword().equals(userModel.getReNewPassword())){
+            userModel.setNewPassword(null);
+            userModel.setReNewPassword(null);
+            model.addAttribute("error", "New password does not match");
+            model.addAttribute("userModel", userModel);
+            return "index";
+        }
+
+        user.setPassword(BCrypt.withDefaults().hashToString(12, userModel.getNewPassword().toCharArray()));
+        userService.updateItem(user.getId(), user);
+
+        model.addAttribute("user", new UserModel());
+        model.addAttribute("mainTitle", "Old password successfully changed!");
+        model.addAttribute("title", "Admin page");
 
         return "index";
     }
@@ -71,17 +133,13 @@ public class UserController {
         user.setLastLogin(LocalDate.now().toString());
 
         HttpSession session = request.getSession();
-        session.setAttribute("userDetails", user);
+        session.setAttribute("userSession", user);
 
-        List<UserModel> users = userService.getItems();
-        List<RoleModel> roles = roleService.getItems();
         userModel.setPassword(null);
-
-        model.addAttribute("roles", roles);
-        model.addAttribute("users", users);
+        model.addAttribute("user", new UserModel());
         model.addAttribute("title", "Admin page");
 
-        return "/admin";
+        return "index";
     }
 
     @GetMapping("/signUp")
@@ -127,9 +185,11 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(Model model) {
+    public String logout(Model model, HttpServletRequest req) {
 
         model.addAttribute("userModel", new UserModel());
+
+        req.getSession().invalidate();
 
         return "login";
     }

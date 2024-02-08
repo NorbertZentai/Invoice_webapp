@@ -97,8 +97,9 @@ public class UserDataService implements DataInterface<UserModel>, UserInterface 
 
     @Override
     public UserModel updateItem(int idToUpdate, UserModel updateItem) {
-        int result = jdbcTemplate.update("UPDATE USER SET USERNAME = ?, ROLE = ?, LAST_LOGIN = ? WHERE ID = ?",
+        int result = jdbcTemplate.update("UPDATE USER SET USERNAME = ?, PASSWORD = ?, ROLE = ?, LAST_LOGIN = ? WHERE ID = ?",
                 updateItem.getUsername(),
+                updateItem.getPassword(),
                 updateItem.getRole(),
                 updateItem.getLastLogin(),
                 idToUpdate);

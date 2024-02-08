@@ -5,9 +5,11 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class UserModel {
+public class UserModel implements Serializable {
     private int id;
     @NotEmpty(message = "Please add a username!")
     private String username;

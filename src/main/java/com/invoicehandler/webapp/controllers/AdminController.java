@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -63,7 +65,7 @@ public class AdminController {
     }
 
     @PostMapping("/editRole")
-    public String editForm(UserModel userModel, RoleModel roleModel, Model model){
+    public String editForm(UserModel userModel, Model model, HttpServletRequest req){
 
         UserModel user = userService.getById(userModel.getId());
 
@@ -74,6 +76,12 @@ public class AdminController {
          } else {
              model.addAttribute("mainTitle", null);
              model.addAttribute("error", "Something went wrong!");
+         }
+
+        HttpSession session = req.getSession();
+
+         if(((UserModel)session.getAttribute("userSession")).getId() == user.getId()){
+             session.setAttribute("userSession", user);
          }
 
         List<UserModel> users = userService.getItems();

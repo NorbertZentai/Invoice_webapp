@@ -2,11 +2,59 @@
 <html layout:decorate="components/default">
 <body>
 <div layout:fragment="content">
-    <div class="containe mt-3 mb-3r">
-        <h1>UserProfile</h1>
-        <p>Username: </span></p>
-        <p>Password: </span></p>
+    <div class="container mt-3 mb-3">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h2 class="card-title">User Profile</h2>
+
+                    <div class="input-group input-group-lg my-4">
+                        <span class="input-group-text" style="width:170px; font-size: 20px">Username: </span>
+                        <p type="text" class="form-control" th:text="${session.userSession.username}"></p>
+                    </div>
+
+                    <div class="input-group input-group-lg my-4">
+                        <span class="input-group-text" style="width:170px; font-size: 20px">Role: </span>
+                        <p type="text" class="form-control" th:text="${session.userSession.role}"></p>
+                    </div>
+
+                    <div class="input-group input-group-lg my-4">
+                        <span class="input-group-text" style="width:170px; font-size: 20px">Last Login Date: </span>
+                        <p type="text" class="form-control" th:text="${session.userSession.lastLogin}"></p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Change Password</h2>
+                        <form action="#" method="post" th:action="@{/passwordUpdate}" th:object="${user}">
+                            <div class="form-group">
+                                <label for="oldPassword">Current Password: </label>
+                                <input th:field="*{password}" type="password" class="form-control" id="oldPassword" name="oldPassword" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Password">New Password: </label>
+                                <input th:field="*{newPassword}" type="password" class="form-control" id="Password" name="Password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newPassword">Confirm New Password: </label>
+                                <input th:field="*{reNewPassword}" type="password" class="form-control" id="newPassword" name="newPassword" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary float-right">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
