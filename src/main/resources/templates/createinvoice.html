@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="components/default">
 <body>
-<div class="container mt-3 mb-3" layout:fragment="content" >
+<div class="container mt-3 mb-3 col-md-5" layout:fragment="content" >
     <div class="container my-2">
     <h1 class="text-center">Create Invoice</h1>
         <form action="#" method="post" th:action="@{/invoice/addNewInvoice}" th:object="${invoiceModel}">
-            <div class="form-group">
+            <div class="form-group" >
                 <label class="control-label" for="customer">
                     Customer's Name:
                 </label>
@@ -51,8 +51,13 @@
                 <p class="alert alert-danger" th:errors="*{price}" th:if="${#fields.hasErrors('price')}">Price
                     error</p>
             </div>
-            <div class="form-group">
-                <button class="btn btn-success" type="submit">Create</button>
+            <div class="d-flex justify-content-end mt-3">
+                <div class="form-group mr-2 ">
+                    <a th:href="@{/invoice}" class="btn btn-success py-3" style="width:150px;">Back</a>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-info py-3" type="submit" style="width:150px;">Create</button>
+                </div>
             </div>
         </form>
     </div>

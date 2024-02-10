@@ -12,10 +12,10 @@
                 <li class="nav-item active" th:if="${session.userSession == null}">
                     <a class="nav-link" th:href="@{/login}">Login <span class="sr-only"></span></a>
                 </li>
-                <li class="nav-item" th:if="${session.userSession.role =='admin'}">
+                <li class="nav-item" th:if="${session.userSession != null and session.userSession.role =='admin'}">
                     <a class="nav-link" th:href="@{/admin}">Admin</a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" th:if="${session.userSession != null}">
                     <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-toggle="dropdown"
                        id="navbarDropdown" role="button">
                         Invoice

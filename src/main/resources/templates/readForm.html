@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html layout:decorate="components/default"   xmlns:layout="http://www.w3.org/1999/xhtml">
+<body>
+<div class="container mt-3 mb-3" layout:fragment="content" >
+    <h1 class="text-center">Edit Invoice</h1>
+    <div class="container mt-3 mb-3 col-md-6">
+        <div class="form-group">
+            <a th:href="@{/invoice}" class="btn btn-success my-4 py-3 float-right" style="width:150px;">Back</a>
+        </div>
+        <form action="#" method="post" th:action="@{/invoice/updateInvoice}" th:object="${invoiceModel}">
+            <div class="input-group input-group-lg my-2 ">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Id: </span>
+                <p type="text" class="form-control"   th:text="*{id}"></p>
+            </div>
+
+            <div class="input-group input-group-lg my-2">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Customer Name: </span>
+                <p type="text" class="form-control" th:text="*{customerName}"></p>
+            </div>
+
+            <div class="input-group input-group-lg my-2">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Date of Invoice: </span>
+                <p type="text" class="form-control" th:text="*{dateOfInvoice}"></p>
+            </div>
+
+            <div class="input-group input-group-lg my-2">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Due Date: </span>
+                <p type="text" class="form-control" th:text="*{dueDate}"></p>
+            </div>
+
+            <div class="input-group input-group-lg my-2">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Title: </span>
+                <p type="text" class="form-control" th:text="*{title}"></p>
+            </div>
+
+            <div class="input-group input-group-lg my-2">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Comment: </span>
+                <p type="text" class="form-control" th:text="*{comment}"></p>
+            </div>
+
+            <div class="input-group input-group-lg my-2">
+                <span class="input-group-text" style="width:170px; font-size: 20px">Price: </span>
+                <p type="text" class="form-control" th:text="*{price}"></p>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

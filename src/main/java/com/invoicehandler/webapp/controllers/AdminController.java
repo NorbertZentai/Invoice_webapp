@@ -8,9 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,7 +37,6 @@ public class AdminController {
             }
 
             List<UserModel> users = userService.getItems();
-
             List<RoleModel> roles = roleService.getItems();
 
             model.addAttribute("title", "Admin page");
@@ -50,17 +47,16 @@ public class AdminController {
         }
 
     @PostMapping("/delete")
-    public String deleteRole(@Valid UserModel userModel, Model model) {
-
-        System.out.println(userModel);
-
-        UserModel user = userService.getById(userModel.getId());
-
-        if(userService.deleteItem(userModel.getId())){
-            model.addAttribute("mainTitle", "Successfully deleted the user " + user.getUsername() + "!");
-        } else{
+    public String deleteRoles(@RequestParam("selectedIds") List<Integer> selectedIds, Model model) {
+        if (selectedIds.isEmpty()) {
             model.addAttribute("mainTitle", null);
-            model.addAttribute("error", "Something went wrong!");
+            model.addAttribute("error", "No users selected for deletion.");
+        } else {
+            for (int userId : selectedIds) {
+                userService.deleteItem(userId);
+            }
+            model.addAttribute("mainTitle", "Successfully deleted selected users!");
+            model.addAttribute("error", null);
         }
 
         List<UserModel> users = userService.getItems();
@@ -74,24 +70,20 @@ public class AdminController {
     }
 
     @PostMapping("/editRole")
-    public String editForm(UserModel userModel, Model model, HttpServletRequest req){
+    public String editForm(@ModelAttribute UserModel userModel, @RequestParam("selectedIds") List<Integer> selectedIds, Model model){
 
         UserModel user = userService.getById(userModel.getId());
 
+
+
         user.setRole(userModel.getRole());
-         if(userService.updateItem(userModel.getId(), user) != null){
-             model.addAttribute("mainTitle", "Successfully changed role! " + user.getUsername() +
-                     " is now " + user.getRole() + "!");
-         } else {
-             model.addAttribute("mainTitle", null);
-             model.addAttribute("error", "Something went wrong!");
-         }
-
-        HttpSession session = req.getSession();
-
-         if(((UserModel)session.getAttribute("userSession")).getId() == user.getId()){
-             session.setAttribute("userSession", user);
-         }
+        if(userService.updateItem(userModel.getId(), user) != null){
+            model.addAttribute("mainTitle", "Successfully changed role! " + user.getUsername() +
+                    " is now " + user.getRole() + "!");
+        } else {
+            model.addAttribute("mainTitle", null);
+            model.addAttribute("error", "Something went wrong!");
+        }
 
         List<UserModel> users = userService.getItems();
         List<RoleModel> roles = roleService.getItems();
@@ -101,4 +93,5 @@ public class AdminController {
 
         return "admin";
     }
+
 }

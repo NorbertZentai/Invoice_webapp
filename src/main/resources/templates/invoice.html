@@ -65,21 +65,25 @@
                                 <button class="btn btn-danger" type="submit" name="deleteItem">Delete</button>
                             </form>
                         </td>
-                        <td>
+                        <td th:if="${session.userSession.role != 'user'}">
                             <form action="#" method="post" th:action="@{/invoice/editForm}" th:object="${i}">
                                 <input name="id" type="hidden" th:value="${i.id}">
                                 <button class="btn btn-secondary" type="submit" name="editItem">Edit</button>
                             </form>
                         </td>
-                        <td th:if="${session.userSession.role != 'user'}">
-                            <form action="#" method="post" th:action="@{/invoice/item}" th:object="${i}">
+                        <td>
+                            <form action="#" method="post" th:action="@{/invoice/readForm}" th:object="${i}">
                                 <input name="id" type="hidden" th:value="${i.id}">
-                                <button class="btn btn-info" type="submit" name="editItem">Create</button>
+                                <button class="btn btn-secondary" type="submit" name="editItem">Read</button>
                             </form>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                <div class="form-group d-flex justify-content-end align-items-center" th:if="${session.userSession.role != 'user'}">
+                    <h5 class="mr-3">Would you like to create a new Invoice?</h5>
+                    <a th:href="@{/invoice/create}" class="btn btn-warning my-4 py-3" style="width:150px;">Create</a>
+                </div>
             </div>
         </div>
     </div>

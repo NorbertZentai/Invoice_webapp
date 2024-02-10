@@ -3,47 +3,51 @@
 <body>
 <div class="container mt-3 mb-3" layout:fragment="content" >
     <h1 class="text-center">Edit Invoice</h1>
-    <div class="container mt-3 mb-3">
+    <div class="container mt-3 mb-3 col-md-6">
         <form action="#" method="post" th:action="@{/invoice/updateInvoice}" th:object="${invoiceModel}">
             <input type="hidden" th:field="${invoiceModel.id}" name="id">
-                <div class="input-group input-group-lg">
+                <div class="input-group input-group-lg my-4">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="width:150px;">Customer Name</span>
                     <input type="text" class="form-control" aria-label="Sizing example input" th:field="*{customerName}">
                     <p class="alert alert-danger" th:errors="*{customerName}" th:if="${#fields.hasErrors('customerName')}">Customer name error</p>
                 </div>
 
 
-                <div class="input-group input-group-lg">
+                <div class="input-group input-group-lg my-4">
                     <span class="input-group-text w-15" id="inputGroup-sizing-lg" style="width:150px;">Date of Invoice</span>
                     <input type="date" class="form-control" required th:field="*{dateOfInvoice}">
                     <p class="alert alert-danger" th:errors="*{dateOfInvoice}" th:if="${#fields.hasErrors('dateOfInvoice')}">Date error</p>
                 </div>
 
-                <div class="input-group input-group-lg">
+                <div class="input-group input-group-lg my-4">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="width:150px;">Due date: </span>
                     <input type="date" class="form-control" required th:field="*{dueDate}">
                     <p class="alert alert-danger" th:errors="*{dueDate}" th:if="${#fields.hasErrors('dueDate')}">Due date error</p>
                 </div>
 
-                <div class="input-group input-group-lg">
+                <div class="input-group input-group-lg my-4">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="width:150px;">Title: </span>
                     <input type="text" class="form-control" required th:field="*{title}">
                     <p class="alert alert-danger" th:errors="*{title}" th:if="${#fields.hasErrors('title')}">Title error</p>
                 </div>
 
-                <div class="input-group input-group-lg">
+                <div class="input-group input-group-lg my-4">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="width:150px;">Comment: </span>
                     <input type="text" class="form-control" th:field="*{comment}">
                 </div>
 
-                <div class="input-group input-group-lg">
+                <div class="input-group input-group-lg my-4">
                     <span class="input-group-text" id="inputGroup-sizing-lg" style="width:150px;">Price: </span>
                     <input type="number" class="form-control" th:field="*{price}">
                     <p class="alert alert-danger" th:errors="*{price}" th:if="${#fields.hasErrors('price')}">Price error</p>
                 </div>
-
-                <div class="form-group">
-                    <button class="btn btn-success mt-3 py-3 float-right" type="submit" style="width:150px;">Update</button>
+                <div class="d-flex justify-content-end mt-3">
+                    <div class="form-group mr-2 ">
+                        <a th:href="@{/invoice}" class="btn btn-success py-3" style="width:150px;">Back</a>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-info py-3" type="submit" style="width:150px;">Update</button>
+                    </div>
                 </div>
         </form>
     </div>

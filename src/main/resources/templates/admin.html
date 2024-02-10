@@ -8,45 +8,59 @@
         <h1 class="alert alert-danger text-center" th:if="${error != null}" th:text="${error}"></h1>
 
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <table class="table table-bordered table-hover table-sm table-striped" >
+            <div class="col-md-3">
+                <form action="#" method="post" th:action="@{/admin/delete}">
+                    <h2>Delete Users</h2>
+                    <table class="table table-bordered table-hover table-sm table-striped">
+                        <thead>
+                        <tr>
+                            <th style="font-size: larger">User Name</th>
+                            <th>Check Items</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user:${users}">
+                            <td>
+                                <p th:text="${user.username}" style="font-weight: bold">Username</p>
+                            </td>
+                            <td>
+                                <input type="checkbox" th:name="selectedUsers" th:value="${user.id}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-danger float-right" type="submit" name="deleteSelected">Delete</button>
+                </form>
+            </div>
+
+            <div class="col-md-4">
+                <h2>Edit User's Role</h2>
+                <table class="table table-bordered table-hover table-sm table-striped">
                     <thead>
-                    <tr>
-                        <th style="font-size: larger">
-                            User Name
-                        </th>
-                        <th>
-                            Delete
-                        </th>
-                        <th>
-                            Edit
-                        </th>
-                    </tr>
+                        <tr>
+                            <th style="font-size: larger">User Name</th>
+                            <th>Edit</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="u:${users}">
-                        <td>
-                            <p th:text="${u.username}" style=" font-weight: bold">
-                                1
-                            </p>
-                        </td>
-                        <td>
-                            <form action="#" method="post" th:action="@{/admin/delete}" th:object="${u}">
-                                <input name="id" type="hidden" th:value="${u.id}">
-                                <button class="btn btn-danger" type="submit" name="deleteItem">Delete</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="#" method="post" th:action="@{/admin/editRole}" th:object="${u}">
-                                <select name="role" class="form-select w-50">
-                                    <option th:each="r : ${roles}" th:value="${r.getRoleName()}" th:text="${r.getRoleName()}"
-                                            th:selected="${u.role == r.getRoleName()}">Roles</option>
-                                </select>
-                                <input name="id" type="hidden" th:value="${u.id}">
-                                <button class="btn btn-secondary" type="submit" name="editItem">update</button>
-                            </form>
-                        </td>
-                    </tr>
+                        <tr th:each="user : ${users}" th:object="${user}">
+                            <td>
+                                <p th:text="${user.username}" style="font-weight: bold">Username</p>
+                            </td>
+                            <td>
+                                <form action="#" method="post" th:action="@{/admin/editRole}">
+                                    <select name="role">
+                                        <option th:each="r:${roles}"
+                                                th:text="${r.getRoleName()}"
+                                                th:value="${r.getRoleName()}"
+                                                th:selected="${r.getRoleName() == user.getRole()}">
+                                        </option>
+                                    </select>
+                                    <input name="id" type="hidden" th:value="${user.id}">
+                                    <button type="submit">Update</button>
+                                </form>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

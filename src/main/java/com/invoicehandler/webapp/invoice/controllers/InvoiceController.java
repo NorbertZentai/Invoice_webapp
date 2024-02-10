@@ -126,10 +126,28 @@ public class InvoiceController {
         return "invoice";
     }
 
+    @PostMapping("/readForm")
+    public String readForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req){
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user == null){
+            model.addAttribute("title", "Login");
+            model.addAttribute("userModel", new UserModel());
+
+            return "login";
+        }
+
+        InvoiceModel item = invoiceService.getById(invoiceModel.getId());
+
+        model.addAttribute("title", "Edit Invoice");
+        model.addAttribute("invoiceModel", item);
+
+        return "readForm";
+    }
+
     @PostMapping("/editForm")
     public String editForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
-        if(user == null){
+        if(user == null || user.getRole().equals("user")){
             model.addAttribute("title", "Login");
             model.addAttribute("userModel", new UserModel());
 

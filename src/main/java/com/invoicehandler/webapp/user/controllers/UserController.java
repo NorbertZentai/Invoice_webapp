@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -115,7 +114,7 @@ public class UserController {
 
         if( user == null) {
             userModel.setPassword(null);
-            model.addAttribute("mainTitle", "Wrong username or password!");
+            model.addAttribute("error", "Wrong username or password!");
             model.addAttribute("userModel", userModel);
             return "/login";
         }
@@ -124,7 +123,7 @@ public class UserController {
 
         if(!result.verified){
             userModel.setPassword(null);
-            model.addAttribute("mainTitle", "Wrong username or password!");
+            model.addAttribute("error", "Wrong username or password!");
             model.addAttribute("userModel", userModel);
             return "/login";
         }
@@ -153,6 +152,7 @@ public class UserController {
     @PostMapping("/processSignUp")
     public String registration(@Valid UserModel userModel, Model model) {
 
+
         if(!Objects.equals(userModel.getPassword(), userModel.getRePassword())){
             userModel.setPassword(null);
             userModel.setRePassword(null);
@@ -174,6 +174,7 @@ public class UserController {
         userModel.setRole("user");
 
         userService.addItem(userModel);
+
 
         model.addAttribute("title", "Login");
         model.addAttribute("mainTitle", "Successful registration! Let's log in!");

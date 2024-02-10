@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +24,7 @@ public class UserModel implements Serializable {
     private String reNewPassword;
     private String role;
     private String lastLogin;
+    private List<Integer> selectedIds;
 
     @Override
     public String toString() {
