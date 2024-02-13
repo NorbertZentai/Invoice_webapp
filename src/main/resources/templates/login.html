@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="components/default">
+<html layout:decorate="components/default" xmlns:th="https://www.thymeleaf.org/">
 <body>
 <div layout:fragment="content">
     <div class="alert alert-success text-center" th:if="${error == null}">
@@ -20,6 +20,14 @@
                     <span class="input-group-text w-15" style="width:150px;">Password: </span>
                     <input type="password" autofocus="autofocus" class="form-control" required th:field="*{password}">
                     <p class="alert alert-danger" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password error</p>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="g-recaptcha"
+                             data-sitekey="6LelyHEpAAAAAIbZMkyHtmtYClEimSF2ZXmRRuy0"
+                             data-callback="onSubmit">
+                        </div>
+                    </div>
                 </div>
                 <button class="btn btn-primary float-right py-3" type="submit" style="width: 150px">Login</button>
                 <span>Don't have an account? <a th:href="@{/signUp}">Sign Up</a></span>

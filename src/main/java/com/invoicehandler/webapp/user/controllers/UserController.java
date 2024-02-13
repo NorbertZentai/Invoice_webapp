@@ -1,6 +1,7 @@
 package com.invoicehandler.webapp.user.controllers;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.invoicehandler.webapp.ReCaptcha.ReCaptchaService;
 import com.invoicehandler.webapp.models.UserModel;
 import com.invoicehandler.webapp.role.service.RoleService;
 import com.invoicehandler.webapp.user.services.UserService;
@@ -11,18 +12,25 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.Objects;
+
+import static net.sf.jsqlparser.util.validation.metadata.NamedObject.user;
 
 @Controller
 @RequestMapping
 public class UserController {
     UserService userService;
     RoleService roleService;
+
+    @Autowired
+    private ReCaptchaService validator;
 
     @Autowired
     public UserController(UserService userService, RoleService roleService) {
@@ -65,12 +73,13 @@ public class UserController {
     }
 
     @PostMapping("/passwordUpdate")
-    public String updatePassword(UserModel userModel, Model model, HttpServletRequest req) {
+    public String updatePassword(@Valid UserModel userModel, BindingResult bindingResult,
+                                 Model model, HttpServletRequest req){
 
         UserModel user = userService.getById(((UserModel) req.getSession().getAttribute("userSession")).getId());
 
         BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
-
+        System.out.println("alma");
         if(!result.verified){
             userModel.setPassword(null);
             userModel.setNewPassword(null);
@@ -108,7 +117,15 @@ public class UserController {
     }
 
     @PostMapping("/processLogin")
-    public String login(@Valid UserModel userModel, Model model, HttpServletRequest request) {
+    public String login(@Valid UserModel userModel, Model model,
+                        HttpServletRequest request, @RequestParam(name="g-recaptcha-response") String captcha) {
+
+        if(!validator.validateCaptcha(captcha)){
+            userModel.setPassword(null);
+            model.addAttribute("error", "Please Verify Captcha");
+            model.addAttribute("userModel", userModel);
+            return "login";
+        }
 
         UserModel user = userService.searchExactUser(userModel.getUsername());
 
@@ -116,16 +133,16 @@ public class UserController {
             userModel.setPassword(null);
             model.addAttribute("error", "Wrong username or password!");
             model.addAttribute("userModel", userModel);
-            return "/login";
-        }
+            return "login";
+        } else{
+            BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
 
-        BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
-
-        if(!result.verified){
-            userModel.setPassword(null);
-            model.addAttribute("error", "Wrong username or password!");
-            model.addAttribute("userModel", userModel);
-            return "/login";
+            if(!result.verified){
+                userModel.setPassword(null);
+                model.addAttribute("error", "Wrong username or password!");
+                model.addAttribute("userModel", userModel);
+                return "login";
+            }
         }
 
         user.setLastLogin(LocalDate.now().toString());
