@@ -75,8 +75,6 @@ public class AdminController {
 
         UserModel user = userService.getById(userModel.getId());
 
-
-
         user.setRole(userModel.getRole());
         if(userService.updateItem(userModel.getId(), user) != null){
             model.addAttribute("mainTitle", "Successfully changed role! " + user.getUsername() +

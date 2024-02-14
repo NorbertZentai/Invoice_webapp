@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +33,7 @@ public class UserController {
 
     @Autowired
     private ReCaptchaService validator;
+    private int failedLoginAttempts = 0;
 
     @Autowired
     public UserController(UserService userService, RoleService roleService) {
@@ -42,8 +45,9 @@ public class UserController {
     public String displayIndex(Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
+            model.addAttribute("failedLoginAttempts", failedLoginAttempts);
             model.addAttribute("title", "Login");
-            model.addAttribute("user", new UserModel());
+            model.addAttribute("userModel", new UserModel());
 
             return "login";
         }
@@ -55,11 +59,11 @@ public class UserController {
 
     }
 
-
     @GetMapping
     public String index(Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
+            model.addAttribute("failedLoginAttempts", failedLoginAttempts);
             model.addAttribute("title", "Login");
             model.addAttribute("userModel", new UserModel());
 
@@ -86,7 +90,7 @@ public class UserController {
             userModel.setReNewPassword(null);
             model.addAttribute("error", "Wrong current password!");
             model.addAttribute("user", userModel);
-            return "redirect:index";
+            return "index";
         }
 
         if(!userModel.getNewPassword().equals(userModel.getReNewPassword())){
@@ -109,42 +113,50 @@ public class UserController {
 
     @GetMapping("/login")
     public String displayLogin(Model model) {
-
+        model.addAttribute("failedLoginAttempts", failedLoginAttempts);
         model.addAttribute("title", "Login");
-        model.addAttribute("user", new UserModel());
+        model.addAttribute("userModel", new UserModel());
 
         return "login";
     }
 
     @PostMapping("/processLogin")
     public String login(@Valid UserModel userModel, Model model,
-                        HttpServletRequest request, @RequestParam(name="g-recaptcha-response") String captcha) {
+                        HttpServletRequest request, @Nullable @RequestParam(name="g-recaptcha-response") String captcha) {
 
-        if(!validator.validateCaptcha(captcha)){
-            userModel.setPassword(null);
-            model.addAttribute("error", "Please Verify Captcha");
-            model.addAttribute("user", userModel);
-            return "login";
+        if(failedLoginAttempts > 3){
+            if(!validator.validateCaptcha(captcha)){
+                userModel.setPassword(null);
+                model.addAttribute("error", "Please Verify Captcha");
+                model.addAttribute("user", userModel);
+                model.addAttribute("failedLoginAttempts", failedLoginAttempts);
+                return "login";
+            }
         }
 
         UserModel user = userService.searchExactUser(userModel.getUsername());
 
         if( user == null) {
             userModel.setPassword(null);
+            failedLoginAttempts++;
             model.addAttribute("error", "Wrong username or password!");
             model.addAttribute("user", userModel);
+            model.addAttribute("failedLoginAttempts", failedLoginAttempts);
             return "login";
         } else{
             BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
 
             if(!result.verified){
                 userModel.setPassword(null);
+                failedLoginAttempts++;
                 model.addAttribute("error", "Wrong username or password!");
                 model.addAttribute("user", userModel);
+                model.addAttribute("failedLoginAttempts", failedLoginAttempts);
                 return "login";
             }
         }
 
+        failedLoginAttempts=0;
         user.setLastLogin(LocalDate.now().toString());
 
         HttpSession session = request.getSession();
@@ -169,21 +181,20 @@ public class UserController {
     @PostMapping("/processSignUp")
     public String registration(@Valid UserModel userModel, Model model) {
 
+        if(userService.searchUser(userModel.getUsername()) != null){
+            userModel.setPassword(null);
+            userModel.setRePassword(null);
+            model.addAttribute("userModel", userModel);
+            model.addAttribute("error", "This username cannot be used!");
+            return "signUp";
+        }
 
         if(!Objects.equals(userModel.getPassword(), userModel.getRePassword())){
             userModel.setPassword(null);
             userModel.setRePassword(null);
             model.addAttribute("userModel", userModel);
             model.addAttribute("error", "The passwords did not match!");
-            return "/signUp";
-        }
-
-        if(userService.searchUser(userModel.getUsername()) != null){
-            userModel.setPassword(null);
-            userModel.setRePassword(null);
-            model.addAttribute("userModel", userModel);
-            model.addAttribute("error", "There is already a user with a similar name!");
-            return "/signUp";
+            return "signUp";
         }
 
         userModel.setPassword(BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray()));
@@ -192,20 +203,19 @@ public class UserController {
 
         userService.addItem(userModel);
 
-
+        model.addAttribute("failedLoginAttempts", failedLoginAttempts);
         model.addAttribute("title", "Login");
         model.addAttribute("mainTitle", "Successful registration! Let's log in!");
         model.addAttribute("error", null);
         model.addAttribute("users", userModel);
 
-        return "/login";
+        return "login";
     }
 
     @GetMapping("/logout")
     public String logout(Model model, HttpServletRequest req) {
-
+        model.addAttribute("failedLoginAttempts", failedLoginAttempts);
         model.addAttribute("userModel", new UserModel());
-
         req.getSession().invalidate();
 
         return "login";

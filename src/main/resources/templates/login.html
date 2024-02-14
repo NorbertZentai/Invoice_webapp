@@ -21,7 +21,7 @@
                     <input type="password" autofocus="autofocus" class="form-control" required th:field="*{password}">
                     <p class="alert alert-danger" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password error</p>
                 </div>
-                <div class="row">
+                <div class="row" th:if="${failedLoginAttempts > 2}">
                     <div class="col-4">
                         <div class="g-recaptcha"
                              data-sitekey="6LelyHEpAAAAAIbZMkyHtmtYClEimSF2ZXmRRuy0"
@@ -29,6 +29,7 @@
                         </div>
                     </div>
                 </div>
+
                 <button class="btn btn-primary float-right py-3" type="submit" style="width: 150px">Login</button>
                 <span>Don't have an account? <a th:href="@{/signUp}">Sign Up</a></span>
             </form>
