@@ -15,10 +15,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -45,11 +43,7 @@ public class UserController {
     public String displayIndex(Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            model.addAttribute("failedLoginAttempts", failedLoginAttempts);
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:login";
         }
 
         model.addAttribute("title", "Profile");
@@ -63,11 +57,7 @@ public class UserController {
     public String index(Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            model.addAttribute("failedLoginAttempts", failedLoginAttempts);
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:login";
         }
 
         model.addAttribute("title", "Profile");
@@ -112,25 +102,32 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String displayLogin(Model model) {
+    public String displayLogin(Model model, @ModelAttribute("mainTitle") String mainTitle,
+                               @ModelAttribute("error") String error,
+                               @ModelAttribute("userModel") UserModel userModel){
+
         model.addAttribute("failedLoginAttempts", failedLoginAttempts);
         model.addAttribute("title", "Login");
-        model.addAttribute("userModel", new UserModel());
+        model.addAttribute("mainTitle", (mainTitle.isEmpty() ?null:mainTitle));
+        model.addAttribute("error", (error.isEmpty() ?null:error));
+        model.addAttribute("userModel", (userModel==null)?new UserModel():userModel);
 
         return "login";
     }
 
     @PostMapping("/processLogin")
     public String login(@Valid UserModel userModel, Model model,
-                        HttpServletRequest request, @Nullable @RequestParam(name="g-recaptcha-response") String captcha) {
+                        HttpServletRequest request,
+                        @Nullable @RequestParam(name="g-recaptcha-response") String captcha,
+                        RedirectAttributes redirectAttributes) {
 
-        if(failedLoginAttempts > 3){
+        if(failedLoginAttempts > 2){
             if(!validator.validateCaptcha(captcha)){
                 userModel.setPassword(null);
-                model.addAttribute("error", "Please Verify Captcha");
-                model.addAttribute("user", userModel);
-                model.addAttribute("failedLoginAttempts", failedLoginAttempts);
-                return "login";
+                redirectAttributes.addFlashAttribute("error", "Please Verify Captcha");
+                redirectAttributes.addFlashAttribute("userModel", userModel);
+                redirectAttributes.addFlashAttribute("failedLoginAttempts", failedLoginAttempts);
+                return "redirect:login";
             }
         }
 
@@ -139,20 +136,20 @@ public class UserController {
         if( user == null) {
             userModel.setPassword(null);
             failedLoginAttempts++;
-            model.addAttribute("error", "Wrong username or password!");
-            model.addAttribute("user", userModel);
-            model.addAttribute("failedLoginAttempts", failedLoginAttempts);
-            return "login";
+            redirectAttributes.addFlashAttribute("error", "Wrong username or password!");
+            redirectAttributes.addFlashAttribute("userModel", userModel);
+            redirectAttributes.addFlashAttribute("failedLoginAttempts", failedLoginAttempts);
+            return "redirect:login";
         } else{
             BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
 
             if(!result.verified){
                 userModel.setPassword(null);
                 failedLoginAttempts++;
-                model.addAttribute("error", "Wrong username or password!");
-                model.addAttribute("user", userModel);
-                model.addAttribute("failedLoginAttempts", failedLoginAttempts);
-                return "login";
+                redirectAttributes.addFlashAttribute("error", "Wrong username or password!");
+                redirectAttributes.addFlashAttribute("userModel", userModel);
+                redirectAttributes.addFlashAttribute("failedLoginAttempts", failedLoginAttempts);
+                return "redirect:login";
             }
         }
 
@@ -162,39 +159,37 @@ public class UserController {
         HttpSession session = request.getSession();
         session.setAttribute("userSession", user);
 
-        userModel.setPassword(null);
-        model.addAttribute("user", new UserModel());
-        model.addAttribute("title", "Admin page");
-
-        return "index";
+        return "redirect:index";
     }
 
     @GetMapping("/signUp")
-    public String displaySignUp(Model model) {
+    public String displaySignUp(Model model, @ModelAttribute("userModel") UserModel userModel,
+                                @ModelAttribute("error") String error) {
 
         model.addAttribute("title", "Registration");
-        model.addAttribute("userModel", new UserModel());
+        model.addAttribute("error", (error.isEmpty()?null:error));
+        model.addAttribute("userModel", (userModel==null?new UserModel():userModel));
 
         return "signUp";
     }
 
     @PostMapping("/processSignUp")
-    public String registration(@Valid UserModel userModel, Model model) {
+    public String registration(@Valid UserModel userModel, Model model, RedirectAttributes redirectAttributes) {
 
         if(userService.searchUser(userModel.getUsername()) != null){
             userModel.setPassword(null);
             userModel.setRePassword(null);
-            model.addAttribute("userModel", userModel);
-            model.addAttribute("error", "This username cannot be used!");
-            return "signUp";
+            redirectAttributes.addFlashAttribute("error", "This username cannot be used!");
+            redirectAttributes.addFlashAttribute("userModel", userModel);
+            return "redirect:signUp";
         }
 
         if(!Objects.equals(userModel.getPassword(), userModel.getRePassword())){
             userModel.setPassword(null);
             userModel.setRePassword(null);
-            model.addAttribute("userModel", userModel);
-            model.addAttribute("error", "The passwords did not match!");
-            return "signUp";
+            redirectAttributes.addFlashAttribute("error", "The passwords did not match!");
+            redirectAttributes.addFlashAttribute("userModel", userModel);
+            return "redirect:signUp";
         }
 
         userModel.setPassword(BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray()));
@@ -203,21 +198,17 @@ public class UserController {
 
         userService.addItem(userModel);
 
-        model.addAttribute("failedLoginAttempts", failedLoginAttempts);
-        model.addAttribute("title", "Login");
-        model.addAttribute("mainTitle", "Successful registration! Let's log in!");
-        model.addAttribute("error", null);
-        model.addAttribute("users", userModel);
+        redirectAttributes.addFlashAttribute("mainTitle", "Successful registration! Let's log in!");
+        redirectAttributes.addFlashAttribute("userModel", userModel);
 
-        return "login";
+        return "redirect:login";
     }
 
     @GetMapping("/logout")
     public String logout(Model model, HttpServletRequest req) {
-        model.addAttribute("failedLoginAttempts", failedLoginAttempts);
         model.addAttribute("userModel", new UserModel());
         req.getSession().invalidate();
 
-        return "login";
+        return "redirect:login";
     }
 }

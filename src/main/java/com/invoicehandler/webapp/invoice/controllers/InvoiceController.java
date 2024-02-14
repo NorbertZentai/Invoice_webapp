@@ -7,14 +7,18 @@ import com.invoicehandler.webapp.invoice.services.InvoiceService;
 import com.invoicehandler.webapp.models.UserModel;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,7 +32,9 @@ public class InvoiceController {
     }
 
     @GetMapping
-    public String showAllInvoices(Model model, HttpServletRequest req){
+    public String showAllInvoices(Model model, HttpServletRequest req,
+                                  @Nullable @ModelAttribute("mainTitle") String mainTitle,
+                                  @Nullable @ModelAttribute("error") String error){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
             model.addAttribute("title", "Login");
@@ -39,28 +45,12 @@ public class InvoiceController {
 
         List<InvoiceModel> invoices = invoiceService.getItems();
 
+        model.addAttribute("mainTitle", (mainTitle.isEmpty()?null:mainTitle));
+        model.addAttribute("error", (error.isEmpty()?null:error));
         model.addAttribute("title", "Invoices");
         model.addAttribute("invoices", invoices);
 
-        return "invoice.html";
-    }
-
-    @GetMapping("/item")
-    public String showInvoice(InvoiceModel invoiceModel, Model model, HttpServletRequest req) {
-        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
-        if(user == null){
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
-        }
-
-        InvoiceModel invoice = invoiceService.getById(invoiceModel.getId());
-
-        model.addAttribute("title", "Invoice");
-        model.addAttribute("invoice", invoice);
-
-        return "invoiceItem";
+        return "invoice";
     }
 
     @GetMapping("/create")
@@ -80,50 +70,42 @@ public class InvoiceController {
     }
 
     @PostMapping("/addNewInvoice")
-    public String processInvoice(@Valid InvoiceModel newInvoice, Model model) {
+    public String processInvoice(@Valid InvoiceModel newInvoice, RedirectAttributes redirectAttributes) {
+        if((invoiceService.addItem(newInvoice))==0){
+            redirectAttributes.addFlashAttribute("error", "There was an error. Try again!");
+        } else{
+            redirectAttributes.addFlashAttribute("mainTitle", "Successfully added the new invoice titled "+newInvoice.getTitle());
+        }
 
-        newInvoice.setId(0);
-
-        invoiceService.addItem(newInvoice);
-        List<InvoiceModel> invoices = invoiceService.getItems();
-
-        model.addAttribute("mainTitle", "Item added successfully!");
-        model.addAttribute("invoices", invoices);
-
-        return "invoice";
+        return "redirect:/invoice";
     }
 
     @GetMapping("/searchForm")
     public String showSearch(Model model, HttpServletRequest req) {
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:/login";
         }
 
         model.addAttribute("title", "Search results");
         model.addAttribute("searchModel", new SearchModel());
+        model.addAttribute("invoices", new ArrayList<InvoiceModel>());
+        model.addAttribute("error", null);
 
         return "searchForm";
     }
 
     @PostMapping("/search")
-    public String search(@Valid SearchModel searchModel, BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("searchModel", searchModel);
-            return "searchForm";
-        }
-
+    public String search(@Valid SearchModel searchModel, Model model) {
 
         List<InvoiceModel> invoices = invoiceService.searchItem(searchModel.getSearchTerm());
 
-        model.addAttribute("title", "Search Result");
-        model.addAttribute("mainTitle", "Here are the invoices that we found!");
+        if(invoices.isEmpty()){
+            model.addAttribute("error", "There we no results found!");
+        }
+
         model.addAttribute("invoices", invoices);
-        return "invoice";
+        return "searchForm";
     }
 
     @PostMapping("/readForm")
@@ -145,7 +127,8 @@ public class InvoiceController {
     }
 
     @PostMapping("/editForm")
-    public String editForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req){
+    public String editForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req,
+                           RedirectAttributes redirectAttributes){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null || user.getRole().equals("user")){
             model.addAttribute("title", "Login");
@@ -153,7 +136,13 @@ public class InvoiceController {
 
             return "login";
         }
+
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
+
+        if(item==null){
+            redirectAttributes.addFlashAttribute("error", "Invoice Not Found!");
+            return "redirect:invoice";
+        }
 
         model.addAttribute("title", "Edit Invoice");
         model.addAttribute("invoiceModel", item);
@@ -162,32 +151,30 @@ public class InvoiceController {
     }
 
     @PostMapping("/updateInvoice")
-    public String updateInvoice(@Valid InvoiceModel invoiceModel, BindingResult bindingResult, Model model){
+    public String updateInvoice(@Valid InvoiceModel invoiceModel, RedirectAttributes redirectAttributes){
 
-        invoiceService.updateItem(invoiceModel.getId(), invoiceModel);
+        if((invoiceService.updateItem(invoiceModel.getId(), invoiceModel)) == null){
+            redirectAttributes.addFlashAttribute("error", "Something wen wrong. Try again.");
+        } else {
+            redirectAttributes.addFlashAttribute("mainTitle", "Successfully updated the item with the ID = " + invoiceModel.getId() + "!");
+        }
 
-        List<InvoiceModel> invoices = invoiceService.getItems();
-
-        model.addAttribute("title", "Updated item");
-        model.addAttribute("mainTitle", "Successfully updated the item with the ID = " + invoiceModel.getId() + "!");
-        model.addAttribute("invoices", invoices);
-
-        return "invoice";
+        return "redirect:/invoice";
     }
 
     @PostMapping("/delete")
-    public String deleteInvoice(@Valid InvoiceModel invoiceModel, Model model){
+    public String deleteInvoice(@Valid InvoiceModel invoiceModel, RedirectAttributes redirectAttributes){
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
+        if(item==null){
+            redirectAttributes.addFlashAttribute("error", "Could not delete, Invoice not existing!");
+        }else {
+            redirectAttributes.addFlashAttribute("mainTitle", "Successfully deleted the Item titled " + item.getTitle() + "!");
+        }
 
         invoiceService.deleteItem(invoiceModel.getId());
-        List<InvoiceModel> invoices = invoiceService.getItems();
 
-        model.addAttribute("title", "Deleted item");
-        model.addAttribute("mainTitle", "Successfully deleted the Item titled " + item.getTitle() + "!");
-        model.addAttribute("invoices", invoices);
-
-        return "invoice";
+        return "redirect:/invoice";
     }
 
 

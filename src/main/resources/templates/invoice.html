@@ -3,11 +3,14 @@
 <body>
 
 <div layout:fragment="content">
-    <h1 th:if="${mainTitle}" class="alert alert-success text-center pb-3" th:text="${mainTitle}">
+    <h1 th:if="${mainTitle != null && error == null}" class="alert alert-success text-center pb-3" th:text="${mainTitle}">
         Success!
     </h1>
-    <h1 th:unless="${mainTitle}" class="alert text-center mb-4">List of Invoices</h1>
-    <div class="container mb-3">
+    <h1 th:if="${error != null && mainTitle == null}" class="alert alert-danger text-center pb-3" th:text="${error}">
+        Error!
+    </h1>
+    <h1 class="alert text-center mb-4">List of Invoices</h1>
+    <div class="container mb-3 col-8">
         <div class="container-fluid mt-3 mb-3 row">
             <div class="col-md-12">
                 <table class="table table-bordered table-hover table-sm text-center">
@@ -23,13 +26,7 @@
                             Date of Invoice
                         </th>
                         <th>
-                            Due Date
-                        </th>
-                        <th>
                             Titel
-                        </th>
-                        <th>
-                            Comment
                         </th>
                         <th>
                             Price
@@ -47,13 +44,7 @@
                         <td th:text="${i.dateOfInvoice}">
                             01/04/2012
                         </td>
-                        <td th:text="${i.dueDate}">
-                            01/05/2012
-                        </td>
                         <td th:text="${i.title}">
-                            Default
-                        </td>
-                        <td th:text="${i.comment}">
                             Default
                         </td>
                         <td th:text="${i.price} + ' Ft'">

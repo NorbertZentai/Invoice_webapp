@@ -3,19 +3,92 @@
 <body>
 
     <div layout:fragment="content">
+        <h1 class="alert alert-danger text-center pb-3" th:if="${error}"  th:text="${error}"></h1>
         <h1 class="alert text-center">Search</h1>
-        <div class="container mb-3">
+        <div class="container mb-3 text-center col-7">
             <form action="#" method="post" th:action="@{search}" th:object="${searchModel}">
                 <div class="form-group">
                     <label class="control-label" for="search">
-                        <h4>Search int Title and Comment:</h4>
+                        <h4>Search in Title and Comment:</h4>
                     </label>
-                    <input autofocus="autofocus" class="form-control" id="search" required th:field="*{searchTerm}" type="text"/>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-success" type="submit">Search</button>
+                    <div class="d-flex justify-content-center">
+                        <input autofocus="autofocus" class="form-control" id="search" required th:field="*{searchTerm}" type="text"/>
+                        <button class="btn btn-success ml-2" type="submit">Search</button>
+                    </div>
                 </div>
             </form>
+        </div>
+
+
+        <div class="container mb-3 col-8" th:if="${!invoices.empty}">
+            <div class="container-fluid mt-4 mb-3 row">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover table-sm text-center">
+                        <thead>
+                        <tr>
+                            <th>
+                                Id
+                            </th>
+                            <th>
+                                Recipient
+                            </th>
+                            <th>
+                                Date of Invoice
+                            </th>
+                            <th>
+                                Titel
+                            </th>
+                            <th>
+                                Comment
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="i:${invoices}">
+                            <td th:text="${i.id}">
+                                1
+                            </td>
+                            <td th:text="${i.getCustomerName}">
+                                TB - Monthly
+                            </td>
+                            <td th:text="${i.dateOfInvoice}">
+                                01/04/2012
+                            </td>
+                            <td th:text="${i.title}">
+                                Default
+                            </td>
+                            <td th:text="${i.comment}">
+                                Comment
+                            </td>
+                            <td th:text="${i.price} + ' Ft'">
+                                3000
+                            </td>
+                            <td>
+                                <form action="#" method="post" th:action="@{/invoice/delete}" th:object="${i}">
+                                    <input name="id" type="hidden" th:value="${i.id}">
+                                    <button class="btn btn-danger" type="submit" name="deleteItem">Delete</button>
+                                </form>
+                            </td>
+                            <td th:if="${session.userSession.role != 'user'}">
+                                <form action="#" method="post" th:action="@{/invoice/editForm}" th:object="${i}">
+                                    <input name="id" type="hidden" th:value="${i.id}">
+                                    <button class="btn btn-secondary" type="submit" name="editItem">Edit</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="#" method="post" th:action="@{/invoice/readForm}" th:object="${i}">
+                                    <input name="id" type="hidden" th:value="${i.id}">
+                                    <button class="btn btn-secondary" type="submit" name="editItem">Read</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

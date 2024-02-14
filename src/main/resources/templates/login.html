@@ -2,11 +2,12 @@
 <html layout:decorate="components/default" xmlns:th="https://www.thymeleaf.org/">
 <body>
 <div layout:fragment="content">
-    <div class="alert alert-success text-center" th:if="${error == null}">
+    <div class="alert alert-success text-center" th:if="${error == null && mainTitle == null}">
         <h1>WELCOME!</h1>
         <h4>First you need to log in or create a profile to see and manage your invoices!</h4>
     </div>
     <h1 class="alert alert-danger text-center" th:if="${error != null}" th:text="${error}"></h1>
+    <h1 class="alert alert-success text-center" th:if="${error == null && mainTitle != null}" th:text="${mainTitle}"></h1>
 
     <div class="container my-5 mt-3 mb-3 w-50" >
         <div>
