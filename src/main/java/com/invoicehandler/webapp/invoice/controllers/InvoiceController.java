@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,10 +36,7 @@ public class InvoiceController {
                                   @Nullable @ModelAttribute("error") String error){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:login";
         }
 
         List<InvoiceModel> invoices = invoiceService.getItems();
@@ -57,10 +53,7 @@ public class InvoiceController {
     public String showCreateInvoice(Model model, HttpServletRequest req) {
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null || user.getRole().equals("user")){
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:login";
         }
 
         model.addAttribute("title", "Create Invoice");
@@ -112,10 +105,7 @@ public class InvoiceController {
     public String readForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:login";
         }
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
@@ -131,10 +121,7 @@ public class InvoiceController {
                            RedirectAttributes redirectAttributes){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null || user.getRole().equals("user")){
-            model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
-
-            return "login";
+            return "redirect:login";
         }
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
@@ -170,9 +157,8 @@ public class InvoiceController {
             redirectAttributes.addFlashAttribute("error", "Could not delete, Invoice not existing!");
         }else {
             redirectAttributes.addFlashAttribute("mainTitle", "Successfully deleted the Item titled " + item.getTitle() + "!");
+            invoiceService.deleteItem(invoiceModel.getId());
         }
-
-        invoiceService.deleteItem(invoiceModel.getId());
 
         return "redirect:/invoice";
     }

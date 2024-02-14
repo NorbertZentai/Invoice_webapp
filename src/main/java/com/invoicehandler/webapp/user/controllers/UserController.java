@@ -39,66 +39,49 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/index")
-    public String displayIndex(Model model, HttpServletRequest req){
-        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
-        if(user == null){
-            return "redirect:login";
-        }
-
-        model.addAttribute("title", "Profile");
-        model.addAttribute("user", new UserModel());
-
-        return "index";
-
+    @GetMapping
+    public String index(){
+        return "redirect:index";
     }
 
-    @GetMapping
-    public String index(Model model, HttpServletRequest req){
+    @GetMapping("index")
+    public String displayIndex(Model model, HttpServletRequest req,
+                        @ModelAttribute("mainTitle") String mainTitle,
+                        @ModelAttribute("error") String error){
+
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
             return "redirect:login";
         }
 
         model.addAttribute("title", "Profile");
+        model.addAttribute("mainTitle", (mainTitle.isEmpty() ?null:mainTitle));
+        model.addAttribute("error", (error.isEmpty() ?null:error));
         model.addAttribute("user", new UserModel());
 
         return "index";
     }
 
     @PostMapping("/passwordUpdate")
-    public String updatePassword(@Valid UserModel userModel, BindingResult bindingResult,
-                                 Model model, HttpServletRequest req){
+    public String updatePassword(@Valid UserModel userModel,
+                                 Model model, HttpServletRequest req,
+                                 RedirectAttributes redirectAttributes){
 
         UserModel user = userService.getById(((UserModel) req.getSession().getAttribute("userSession")).getId());
 
         BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
-        System.out.println("alma");
+
         if(!result.verified){
-            userModel.setPassword(null);
-            userModel.setNewPassword(null);
-            userModel.setReNewPassword(null);
-            model.addAttribute("error", "Wrong current password!");
-            model.addAttribute("user", userModel);
-            return "index";
+            redirectAttributes.addFlashAttribute("error", "Wrong current password!");
+        }else if(!userModel.getNewPassword().equals(userModel.getReNewPassword())){
+            redirectAttributes.addFlashAttribute("error", "New passwords do not match!");
+        } else {
+            user.setPassword(BCrypt.withDefaults().hashToString(12, userModel.getNewPassword().toCharArray()));
+            userService.updateItem(user.getId(), user);
+            redirectAttributes.addFlashAttribute("mainTitle", "Old password successfully changed!");
         }
-
-        if(!userModel.getNewPassword().equals(userModel.getReNewPassword())){
-            userModel.setNewPassword(null);
-            userModel.setReNewPassword(null);
-            model.addAttribute("error", "New passwords do not match!");
-            model.addAttribute("user", userModel);
-            return "index";
-        }
-
-        user.setPassword(BCrypt.withDefaults().hashToString(12, userModel.getNewPassword().toCharArray()));
-        userService.updateItem(user.getId(), user);
-
-        model.addAttribute("user", new UserModel());
-        model.addAttribute("mainTitle", "Old password successfully changed!");
-        model.addAttribute("title", "Admin page");
-
-        return "index";
+        
+        return "redirect:index";
     }
 
     @GetMapping("/login")
