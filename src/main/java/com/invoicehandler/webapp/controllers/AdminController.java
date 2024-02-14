@@ -6,6 +6,7 @@ import com.invoicehandler.webapp.user.services.UserService;
 import com.invoicehandler.webapp.role.service.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +71,7 @@ public class AdminController {
     }
 
     @PostMapping("/editRole")
-    public String editForm(@ModelAttribute UserModel userModel, @RequestParam("selectedIds") List<Integer> selectedIds, Model model){
+    public String editForm(@ModelAttribute UserModel userModel, Model model){
 
         UserModel user = userService.getById(userModel.getId());
 

@@ -43,7 +43,7 @@ public class UserController {
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
             model.addAttribute("title", "Login");
-            model.addAttribute("userModel", new UserModel());
+            model.addAttribute("user", new UserModel());
 
             return "login";
         }
@@ -85,15 +85,15 @@ public class UserController {
             userModel.setNewPassword(null);
             userModel.setReNewPassword(null);
             model.addAttribute("error", "Wrong current password!");
-            model.addAttribute("userModel", userModel);
-            return "index";
+            model.addAttribute("user", userModel);
+            return "redirect:index";
         }
 
         if(!userModel.getNewPassword().equals(userModel.getReNewPassword())){
             userModel.setNewPassword(null);
             userModel.setReNewPassword(null);
-            model.addAttribute("error", "New password does not match");
-            model.addAttribute("userModel", userModel);
+            model.addAttribute("error", "New passwords do not match!");
+            model.addAttribute("user", userModel);
             return "index";
         }
 
@@ -111,7 +111,7 @@ public class UserController {
     public String displayLogin(Model model) {
 
         model.addAttribute("title", "Login");
-        model.addAttribute("userModel", new UserModel());
+        model.addAttribute("user", new UserModel());
 
         return "login";
     }
@@ -123,7 +123,7 @@ public class UserController {
         if(!validator.validateCaptcha(captcha)){
             userModel.setPassword(null);
             model.addAttribute("error", "Please Verify Captcha");
-            model.addAttribute("userModel", userModel);
+            model.addAttribute("user", userModel);
             return "login";
         }
 
@@ -132,7 +132,7 @@ public class UserController {
         if( user == null) {
             userModel.setPassword(null);
             model.addAttribute("error", "Wrong username or password!");
-            model.addAttribute("userModel", userModel);
+            model.addAttribute("user", userModel);
             return "login";
         } else{
             BCrypt.Result result = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), user.getPassword());
@@ -140,7 +140,7 @@ public class UserController {
             if(!result.verified){
                 userModel.setPassword(null);
                 model.addAttribute("error", "Wrong username or password!");
-                model.addAttribute("userModel", userModel);
+                model.addAttribute("user", userModel);
                 return "login";
             }
         }
