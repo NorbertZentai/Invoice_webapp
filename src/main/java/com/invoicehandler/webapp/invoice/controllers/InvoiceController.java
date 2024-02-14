@@ -36,7 +36,7 @@ public class InvoiceController {
                                   @Nullable @ModelAttribute("error") String error){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            return "redirect:login";
+            return "redirect:/index";
         }
 
         List<InvoiceModel> invoices = invoiceService.getItems();
@@ -53,7 +53,7 @@ public class InvoiceController {
     public String showCreateInvoice(Model model, HttpServletRequest req) {
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null || user.getRole().equals("user")){
-            return "redirect:login";
+            return "redirect:/index";
         }
 
         model.addAttribute("title", "Create Invoice");
@@ -77,7 +77,7 @@ public class InvoiceController {
     public String showSearch(Model model, HttpServletRequest req) {
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            return "redirect:/login";
+            return "redirect:/index";
         }
 
         model.addAttribute("title", "Search results");
@@ -105,7 +105,7 @@ public class InvoiceController {
     public String readForm(InvoiceModel invoiceModel, Model model, HttpServletRequest req){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null){
-            return "redirect:login";
+            return "redirect:/index";
         }
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());
@@ -121,7 +121,7 @@ public class InvoiceController {
                            RedirectAttributes redirectAttributes){
         UserModel user = (UserModel) req.getSession().getAttribute("userSession");
         if(user == null || user.getRole().equals("user")){
-            return "redirect:login";
+            return "redirect:/index";
         }
 
         InvoiceModel item = invoiceService.getById(invoiceModel.getId());

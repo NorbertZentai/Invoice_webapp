@@ -36,7 +36,7 @@ public class AdminController {
             UserModel user = (UserModel) req.getSession().getAttribute("userSession");
 
             if(user == null || !user.getRole().equals("admin")){
-                return "redirect:login";
+                return "redirect:/index";
             }
 
             List<UserModel> users = userService.getItems();

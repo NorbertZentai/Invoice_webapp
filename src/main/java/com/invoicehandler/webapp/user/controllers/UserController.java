@@ -86,9 +86,14 @@ public class UserController {
 
     @GetMapping("/login")
     public String displayLogin(Model model, @ModelAttribute("mainTitle") String mainTitle,
+                               HttpServletRequest req,
                                @ModelAttribute("error") String error,
                                @ModelAttribute("userModel") UserModel userModel){
 
+        UserModel user = (UserModel) req.getSession().getAttribute("userSession");
+        if(user != null){
+            return "redirect:/index";
+        }
         model.addAttribute("failedLoginAttempts", failedLoginAttempts);
         model.addAttribute("title", "Login");
         model.addAttribute("mainTitle", (mainTitle.isEmpty() ?null:mainTitle));
